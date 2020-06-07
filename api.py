@@ -22,10 +22,22 @@ def get_task(task_id=1):
     params['user_id'] = task.user_id
     params['content'] = task.content
     params['answer'] = task.answer
-    print(params)
     return jsonify(params)
 
 
+@blueprint.route('/api/post_task')
+def post_task():
+    # Функцию post будем дорабатывать когда, когда уже напишем клиентскую часть
+    # Мы подставили конкретные данные для отладки
+    session = db_session.create_session()
+    last_task = session.query(Task).filter(Task.id).all()[-1]
 
+    task = Task(
+        id=last_task.id + 1,
+        name='Сложная задачка',
+        user_id=1,
+        content='Сколько будет 2 + 2 * 2',
+        answer='8')
 
-
+    session.add(task)
+    session.commit()
