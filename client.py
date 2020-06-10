@@ -63,6 +63,7 @@ class MathBattle(QMainWindow):
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
 
+
 app = QApplication(sys.argv)
 ex = MathBattle()
 ex.show()
