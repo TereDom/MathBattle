@@ -13,13 +13,14 @@ class MathBattle(QMainWindow):
 
         super().__init__()
 
-        uic.loadUi('client.ui', self)
+        uic.loadUi('data/ui/client.ui', self)
         current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
         self.post_task()
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
+
 
     def get_next_task(self):
         global task_id, current_task
