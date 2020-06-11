@@ -40,40 +40,49 @@ class MathBattle(QMainWindow):
         self.DelCalcButton.clicked.connect(self.special_operation)
         self.EqualCalcButton.clicked.connect(self.special_operation)
 
-        self.calc_board = ''
-        self.labelCalc.setText(self.nice_view(self.calc_board))
-        self.number = '0'
+        self.expr_board = ''
+        self.number_board = ''
+        self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     # Калькулятор
     def num_operation(self):
-        self.number += self.sender().text()
-        self.calc_board += self.sender().text()
-        self.labelCalc.setText(self.nice_view(self.calc_board))
+        self.number_board += self.sender().text()
+        self.number_board = str(int(self.number_board)) \
+            if '.' not in self.number_board else str(float(self.number_board))
+        self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     def arithmetic_operation(self):
-        self.calc_board = '0' if len(self.calc_board) == 0 else self.calc_board
-        if self.sender().text() == '.' and '.' not in self.number:
-            self.number += self.sender().text()
-            self.calc_board += self.sender().text()
-        elif self.sender().text() in ['+', '-', '*', '/']:
-            if self.calc_board[-1] in ['+', '-', '*', '/']:
-                self.calc_board = self.calc_board[:-1] + self.sender().text()
+        if self.sender().text() == '.':
+            try:
+                test = eval(self.number_board + '.')
+                self.number_board += self.sender().text()
+                self.labelCalcNums.setText(self.nice_view(self.number_board))
+            except:
+                pass
+        else:
+            self.expr_board += self.number_board
+            if self.expr_board[-1] in ['+', '-', '*', '/']:
+                self.expr_board = self.expr_board[:-1] + self.sender().text()
             else:
-                self.calc_board += self.sender().text()
-                self.number = '0'
-        self.labelCalc.setText(self.nice_view(self.calc_board))
+                self.expr_board += self.sender().text()
+                self.number_board = ''
+            self.labelExprCalc.setText(self.expr_board)
+            self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     def special_operation(self):
         if self.sender().text() == '⌫':
-            self.calc_board = self.calc_board[:-1]
-            self.labelCalc.setText(self.nice_view(self.calc_board))
+            self.number_board = self.number_board[:-1] if len(self.number_board) != 0 else ''
+            self.labelCalcNums.setText(self.nice_view(self.number_board))
         if self.sender().text() == '=':
             try:
-                self.calc_board = str(eval(self.calc_board))
-                self.labelCalc.setText(self.calc_board)
+                self.expr_board += self.number_board
+                self.number_board = str(eval(self.expr_board))
+                self.labelCalcNums.setText(self.number_board)
+                self.labelExprCalc.setText(self.expr_board + '=')
+                self.expr_board = ''
             except:
-                self.labelCalc.setText('Error')
-                self.calc_board = ''
+                self.labelCalcNums.setText('Error')
+                self.number_board, self.expr_board = '', ''
 
     def nice_view(self, string):
         return '0' if string == '' else string
