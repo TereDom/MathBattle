@@ -1,5 +1,6 @@
 import sys
 from PyQt5 import uic
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 from requests import get, post, put
 
@@ -45,17 +46,19 @@ class MathBattle(QMainWindow):
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     # Калькулятор
-    def num_operation(self):
-        self.number_board += self.sender().text()
+    def num_operation(self, button=''):
+        button = self.sender().text() if not button else button
+        self.number_board += button
         self.number_board = str(int(self.number_board)) \
             if '.' not in self.number_board else str(float(self.number_board))
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
-    def arithmetic_operation(self):
-        if self.sender().text() == '.':
+    def arithmetic_operation(self, button=''):
+        button = self.sender().text() if not button else button
+        if button == '.':
             try:
                 test = eval(self.number_board + '.')
-                self.number_board += self.sender().text()
+                self.number_board += button
                 self.labelCalcNums.setText(self.nice_view(self.number_board))
             except:
                 pass
@@ -63,21 +66,22 @@ class MathBattle(QMainWindow):
             self.expr_board += self.number_board
             if self.expr_board:
                 if self.expr_board[-1] in ['+', '-', '*', '/']:
-                    self.expr_board = self.expr_board[:-1] + self.sender().text()
+                    self.expr_board = self.expr_board[:-1] + button
                 else:
-                    self.expr_board += self.sender().text()
+                    self.expr_board += button
             else:
-                self.expr_board += '0' + self.sender().text()
+                self.expr_board += '0' + button
 
             self.number_board = ''
             self.labelExprCalc.setText(self.expr_board)
             self.labelCalcNums.setText(self.nice_view(self.number_board))
 
-    def special_operation(self):
-        if self.sender().text() == '⌫':
+    def special_operation(self, button=''):
+        button = self.sender().text() if not button else button
+        if button == '⌫':
             self.number_board = self.number_board[:-1] if len(self.number_board) != 0 else ''
             self.labelCalcNums.setText(self.nice_view(self.number_board))
-        if self.sender().text() == '=':
+        if button == '=':
             try:
                 self.expr_board += self.number_board
                 self.number_board = str(eval(self.expr_board))
@@ -90,6 +94,8 @@ class MathBattle(QMainWindow):
 
     def nice_view(self, string):
         return '0' if string == '' else string
+
+    # Работа с сервером
 
     def get_next_task(self):
         global task_id, current_task
@@ -132,6 +138,24 @@ class MathBattle(QMainWindow):
         self.labelID.setText(f'ID: {current_task["id"]}')
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
+
+    # обработка кнопок клавиатуры
+
+    def keyPressEvent(self, event):
+        if event.text() in map(str, range(0, 10)):
+            self.num_operation(event.text())
+
+        if event.text() in ['+', '-', '*', '/']:
+            self.arithmetic_operation(event.text())
+
+        if event.key() == Qt.Key_Enter:
+            self.special_operation('=')
+
+        if event.key() == Qt.Key_Backspace:
+            self.special_operation('⌫')
+
+# Можно попробовать сделать визуальное отображение нажатий кнопок на калькуляторе
+# При кнопки на клавиатуре она как бы нажималась и в калькуляторе
 
 
 app = QApplication(sys.argv)
