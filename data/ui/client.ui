@@ -91,6 +91,9 @@
           <property name="acceptDrops">
            <bool>true</bool>
           </property>
+          <property name="toolTip">
+           <string/>
+          </property>
           <property name="title">
            <string>Калькулятор:</string>
           </property>
@@ -776,6 +779,9 @@
            <property name="focusPolicy">
             <enum>Qt::WheelFocus</enum>
            </property>
+           <property name="toolTip">
+            <string>Найти задачу по ID</string>
+           </property>
            <property name="text">
             <string>Найти</string>
            </property>
@@ -817,6 +823,9 @@
               <height>25</height>
              </size>
             </property>
+            <property name="toolTip">
+             <string>Выйти из аккаунта</string>
+            </property>
             <property name="styleSheet">
              <string notr="true"/>
             </property>
@@ -843,6 +852,9 @@
              <font>
               <pointsize>14</pointsize>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>Настройки</string>
             </property>
             <property name="text">
              <string>✚</string>
@@ -957,6 +969,9 @@
                 <pointsize>14</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>ID задачи</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
               </property>
@@ -1043,6 +1058,9 @@
                   <pointsize>12</pointsize>
                  </font>
                 </property>
+                <property name="toolTip">
+                 <string>Пожаловаться на задачу</string>
+                </property>
                 <property name="text">
                  <string>!</string>
                 </property>
@@ -1086,6 +1104,9 @@
                <font>
                 <pointsize>14</pointsize>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>Колличество баллов за задачу</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -1187,6 +1208,9 @@
                 <property name="focusPolicy">
                  <enum>Qt::NoFocus</enum>
                 </property>
+                <property name="toolTip">
+                 <string>Предидущая задача</string>
+                </property>
                 <property name="styleSheet">
                  <string notr="true"/>
                 </property>
@@ -1254,6 +1278,9 @@
                 <property name="focusPolicy">
                  <enum>Qt::WheelFocus</enum>
                 </property>
+                <property name="toolTip">
+                 <string>Следующая задача</string>
+                </property>
                 <property name="text">
                  <string>⮞</string>
                 </property>
@@ -1303,6 +1330,9 @@
                  <width>151</width>
                  <height>21</height>
                 </rect>
+               </property>
+               <property name="toolTip">
+                <string>Поле для ответа</string>
                </property>
               </widget>
               <widget class="QPushButton" name="ButtonSendAnswer">
@@ -1355,6 +1385,9 @@
                <property name="focusPolicy">
                 <enum>Qt::WheelFocus</enum>
                </property>
+               <property name="toolTip">
+                <string>Проверить ответ</string>
+               </property>
                <property name="text">
                 <string>Проверить</string>
                </property>
@@ -1375,6 +1408,9 @@
                </property>
                <property name="focusPolicy">
                 <enum>Qt::TabFocus</enum>
+               </property>
+               <property name="toolTip">
+                <string>Статус</string>
                </property>
                <property name="frameShape">
                 <enum>QFrame::Panel</enum>
@@ -1411,6 +1447,9 @@
                 <pointsize>14</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Баллы</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
               </property>
@@ -1431,6 +1470,9 @@
                <font>
                 <pointsize>18</pointsize>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>Электронный адрес</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -1474,6 +1516,9 @@
                 <pointsize>18</pointsize>
                </font>
               </property>
+              <property name="toolTip">
+               <string>Имя</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
               </property>
@@ -1503,6 +1548,9 @@
                <font>
                 <pointsize>14</pointsize>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>Статус</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -1541,6 +1589,9 @@
                <font>
                 <pointsize>18</pointsize>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>День рождения</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
