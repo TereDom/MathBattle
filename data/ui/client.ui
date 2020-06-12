@@ -648,8 +648,21 @@
            </property>
            <property name="font">
             <font>
+             <family>MS Shell Dlg 2</family>
              <pointsize>10</pointsize>
             </font>
+           </property>
+           <property name="acceptDrops">
+            <bool>false</bool>
+           </property>
+           <property name="autoFillBackground">
+            <bool>false</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: rgb(126, 126, 126);</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
            </property>
            <property name="text">
             <string/>

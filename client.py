@@ -61,11 +61,15 @@ class MathBattle(QMainWindow):
                 pass
         else:
             self.expr_board += self.number_board
-            if self.expr_board[-1] in ['+', '-', '*', '/']:
-                self.expr_board = self.expr_board[:-1] + self.sender().text()
+            if self.expr_board:
+                if self.expr_board[-1] in ['+', '-', '*', '/']:
+                    self.expr_board = self.expr_board[:-1] + self.sender().text()
+                else:
+                    self.expr_board += self.sender().text()
             else:
-                self.expr_board += self.sender().text()
-                self.number_board = ''
+                self.expr_board += '0' + self.sender().text()
+
+            self.number_board = ''
             self.labelExprCalc.setText(self.expr_board)
             self.labelCalcNums.setText(self.nice_view(self.number_board))
 
