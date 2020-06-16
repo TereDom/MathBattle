@@ -173,11 +173,17 @@ class SettingsWindow(QWidget):
         super().__init__()
         uic.loadUi('data/ui/settings.ui', self)
         self.new_settings = {}
+        # self.new_settings_list = open("data/settings.txt", "w")
+        self.old_settings_list = open("data/settings.txt", "r").read().split('\n')
+
         self.ButtonAccept.clicked.connect(self.accept)
         self.ButtonCancel.clicked.connect(self.hide)
 
         self.radioButton_1_1.toggled.connect(self.onClicked)
         self.radioButton_1_2.toggled.connect(self.onClicked)
+
+        for i in range(1, 2):
+            eval(f'self.radioButton_{i}_{self.old_settings_list[i - 1].split("&")[1]}.setChecked(True)')
 
     def accept(self):
         for i in range(1, 2):
@@ -188,7 +194,7 @@ class SettingsWindow(QWidget):
         radioButton = self.sender()
         if radioButton.isChecked():
             txt = radioButton.objectName().split('_')
-            self.new_settings[txt[1]] = radioButton.text()
+            self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
         print(self.new_settings)
 
 
