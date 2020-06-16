@@ -1,7 +1,8 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
+from PyQt5.QtCore import Qt, QPoint, QCoreApplication
+from PyQt5.QtGui import QImage, QPainter, QPen
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog
 from requests import get, post, put
 
 task_id = 1
@@ -13,13 +14,15 @@ class MathBattle(QMainWindow):
         global current_task
         super().__init__()
 
-        uic.loadUi('data/ui/client.ui', self)
+        uic.loadUi('data/ui/client1.ui', self)
         current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
         self.post_task()
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
+
+        self.ButtonSettings.clicked.connect(self.open_settings)
 
         self.OneCalcButton.clicked.connect(self.num_operation)
         self.TwoCalcButton.clicked.connect(self.num_operation)
@@ -45,7 +48,12 @@ class MathBattle(QMainWindow):
         self.number_board = ''
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
+    def open_settings(self):
+        self.settings_win = SettingsWindow()
+        self.settings_win.show()
+
     # Калькулятор
+
     def num_operation(self, button=''):
         button = self.sender().text() if not button else button
         self.number_board += button
@@ -128,9 +136,11 @@ class MathBattle(QMainWindow):
     def check_answer(self):
         if self.lineAnswer.text() == current_task['answer']:
             self.labelAnswStatus.setText('✓')
+            self.labelAnswStatus.setToolTip('Статус: зачтено')
             put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_ID}/{task_id}')
         else:
             self.labelAnswStatus.setText('✕')
+            self.labelAnswStatus.setToolTip('Статус: неправельное решение')
 
     def post_task(self):
         self.TextTask.setPlainText(current_task['content'])
@@ -156,6 +166,30 @@ class MathBattle(QMainWindow):
 
 # Можно попробовать сделать визуальное отображение нажатий кнопок на калькуляторе
 # При кнопки на клавиатуре она как бы нажималась и в калькуляторе
+
+
+class SettingsWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('data/ui/settings.ui', self)
+        self.new_settings = {}
+        self.ButtonAccept.clicked.connect(self.accept)
+        self.ButtonCancel.clicked.connect(self.hide)
+
+        self.radioButton_1_1.toggled.connect(self.onClicked)
+        self.radioButton_1_2.toggled.connect(self.onClicked)
+
+    def accept(self):
+        for i in range(1, 2):
+            pass
+        self.hide()
+
+    def onClicked(self):
+        radioButton = self.sender()
+        if radioButton.isChecked():
+            txt = radioButton.objectName().split('_')
+            self.new_settings[txt[1]] = radioButton.text()
+        print(self.new_settings)
 
 
 app = QApplication(sys.argv)

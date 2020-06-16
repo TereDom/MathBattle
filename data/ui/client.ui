@@ -1125,38 +1125,6 @@
               </property>
              </widget>
             </item>
-            <item row="3" column="0">
-             <widget class="QPlainTextEdit" name="TextTask">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>711</width>
-                <height>221</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>711</width>
-                <height>341</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>12</pointsize>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="plainText">
-               <string>Задача организации, в особенности же внедрение современных методик напрямую зависит от кластеризации усилий. Но выбранный нами инновационный путь создаёт необходимость включения в производственный план целого ряда внеочередных мероприятий с учётом комплекса новых принципов формирования материально-технической и кадровой базы. Повседневная практика показывает, что разбавленное изрядной долей эмпатии, рациональное мышление влечет за собой процесс внедрения и модернизации анализа существующих паттернов поведения. Банальные, но неопровержимые выводы, а также тщательные исследования конкурентов представляют собой не что иное, как квинтэссенцию победы маркетинга над разумом и должны быть призваны к ответу. Таким образом, экономическая повестка сегодняшнего дня напрямую зависит от глубокомысленных рассуждений. В своём стремлении улучшить пользовательский опыт мы упускаем, что сторонники тоталитаризма в науке подвергнуты целой серии независимых исследований. Также как высокотехнологичная концепция общественного уклада создаёт необходимость включения в производственный план целого ряда внеочередных мероприятий с учётом комплекса поставленных обществом задач. Равным образом, социально-экономическое развитие не оставляет шанса для первоочередных требований. Кстати, интерактивные прототипы могут быть заблокированы в рамках своих собственных рациональных ограничений.</string>
-              </property>
-             </widget>
-            </item>
             <item row="4" column="0">
              <layout class="QHBoxLayout" name="horizontalLayout">
               <property name="spacing">
@@ -1425,6 +1393,44 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QTextBrowser" name="TextTask">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>711</width>
+                <height>221</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>711</width>
+                <height>341</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>12</pointsize>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::StrongFocus</enum>
+              </property>
+              <property name="tabChangesFocus">
+               <bool>false</bool>
+              </property>
              </widget>
             </item>
            </layout>
