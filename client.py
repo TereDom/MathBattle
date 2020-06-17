@@ -9,6 +9,11 @@ task_id = 1
 USER_ID = 1
 
 
+def set_settings(window):
+    settings = open('data/settings.txt', 'r').read().split('\n')
+    window.setStyleSheet("QWidget {background-color: rgb(81,81,81);}" if settings[0] == 'Тёмная&2' else None)
+
+
 class MathBattle(QMainWindow):
     def __init__(self):
         global current_task
@@ -16,6 +21,7 @@ class MathBattle(QMainWindow):
 
         uic.loadUi('data/ui/client1.ui', self)
         current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
+        set_settings(self)
         self.post_task()
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
@@ -47,6 +53,7 @@ class MathBattle(QMainWindow):
         self.expr_board = ''
         self.number_board = ''
         self.labelCalcNums.setText(self.nice_view(self.number_board))
+
 
     def open_settings(self):
         self.settings_win = SettingsWindow()
@@ -174,6 +181,7 @@ class SettingsWindow(QWidget):
         uic.loadUi('data/ui/settings.ui', self)
         self.new_settings = {}
         self.old_settings_list = open("data/settings.txt", "r").read().split('\n')
+        set_settings(self)
 
         self.ButtonAccept.clicked.connect(self.accept)
         self.ButtonCancel.clicked.connect(self.hide)
