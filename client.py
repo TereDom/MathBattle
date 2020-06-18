@@ -10,8 +10,9 @@ USER_ID = 1
 
 
 def set_settings(window):
-    settings = open('data/settings.txt', 'r').read().split('\n')
-    window.setStyleSheet("QWidget {background-color: rgb(81,81,81);}" if settings[0] == 'Тёмная&2' else None)
+    window.setStyleSheet("background-color: rgb(90, 90, 90);" if window.settings[0] == 'Тёмная&2'
+                         else "background-color: rgb(230, 230, 230);")
+    window.update()
 
 
 class MathBattle(QMainWindow):
@@ -19,16 +20,15 @@ class MathBattle(QMainWindow):
         global current_task
         super().__init__()
 
-        uic.loadUi('data/ui/client1.ui', self)
+        uic.loadUi('data/ui/client.ui', self)
         current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
+        self.settings = open('data/settings.txt', 'r').read().split('\n')
         set_settings(self)
         self.post_task()
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
-
-        self.ButtonSettings.clicked.connect(self.open_settings)
 
         self.OneCalcButton.clicked.connect(self.num_operation)
         self.TwoCalcButton.clicked.connect(self.num_operation)
@@ -54,10 +54,15 @@ class MathBattle(QMainWindow):
         self.number_board = ''
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
+        self.ButtonAccept.clicked.connect(self.accept)
 
-    def open_settings(self):
-        self.settings_win = SettingsWindow()
-        self.settings_win.show()
+        self.radioButton_1_1.toggled.connect(self.onClicked)
+        self.radioButton_1_2.toggled.connect(self.onClicked)
+
+        self.new_settings = {}
+
+        for i in range(1, 2):
+            eval(f'self.radioButton_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
 
     # Калькулятор
 
@@ -156,6 +161,21 @@ class MathBattle(QMainWindow):
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
 
+    # Настройки
+
+    def accept(self):
+        new_settings_list = open("data/settings.txt", "w")
+        new_settings_list.write('\n'.join(self.new_settings.values()))
+        new_settings_list.close()
+        self.settings = open("data/settings.txt", "r").read().split('\n')
+        set_settings(self)
+
+    def onClicked(self):
+        radioButton = self.sender()
+        if radioButton.isChecked():
+            txt = radioButton.objectName().split('_')
+            self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
+
     # обработка кнопок клавиатуры
 
     def keyPressEvent(self, event):
@@ -175,37 +195,11 @@ class MathBattle(QMainWindow):
 # При кнопки на клавиатуре она как бы нажималась и в калькуляторе
 
 
-class SettingsWindow(QWidget):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('data/ui/settings.ui', self)
-        self.new_settings = {}
-        self.old_settings_list = open("data/settings.txt", "r").read().split('\n')
-        set_settings(self)
-
-        self.ButtonAccept.clicked.connect(self.accept)
-        self.ButtonCancel.clicked.connect(self.hide)
-
-        self.radioButton_1_1.toggled.connect(self.onClicked)
-        self.radioButton_1_2.toggled.connect(self.onClicked)
-
-        for i in range(1, 2):
-            eval(f'self.radioButton_{i}_{self.old_settings_list[i - 1].split("&")[1]}.setChecked(True)')
-
-    def accept(self):
-        new_settings_list = open("data/settings.txt", "w")
-        new_settings_list.write('\n'.join(self.new_settings.values()))
-        self.hide()
-
-    def onClicked(self):
-        radioButton = self.sender()
-        if radioButton.isChecked():
-            txt = radioButton.objectName().split('_')
-            self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
-        print(self.new_settings)
+def main():
+    app = QApplication(sys.argv)
+    ex = MathBattle()
+    ex.show()
+    sys.exit(app.exec_())
 
 
-app = QApplication(sys.argv)
-ex = MathBattle()
-ex.show()
-sys.exit(app.exec_())
+main()
