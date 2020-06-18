@@ -69,5 +69,5 @@ def get_user_information(user_id):
     params['name'] = user.nickname
     params['status'] = user.status
     params['decided_tasks'] = user.decided_tasks
-    print(params)
+    params['login'] = user.login
     return jsonify(params)

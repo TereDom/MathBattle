@@ -43,7 +43,12 @@ class MathBattle(QMainWindow):
 
         self.expr_board = ''
         self.number_board = ''
+
         self.labelCalcNums.setText(self.nice_view(self.number_board))
+        user = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()
+        self.Nickname.setText(user['name'])
+        self.Status.setText(user['status'])
+        self.Email.setText(user['login'])
 
     # Калькулятор
     def num_operation(self, button=''):
