@@ -29,6 +29,7 @@ class MathBattle(QMainWindow):
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
+        self.ButtonFindTask.clicked.connect(self.search)
 
         self.OneCalcButton.clicked.connect(self.num_operation)
         self.TwoCalcButton.clicked.connect(self.num_operation)
@@ -79,6 +80,7 @@ class MathBattle(QMainWindow):
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     def arithmetic_operation(self, button=''):
+
         button = self.sender().text() if not button else button
         if button == '.':
             try:
@@ -100,6 +102,18 @@ class MathBattle(QMainWindow):
             self.number_board = ''
             self.labelExprCalc.setText(self.expr_board)
             self.labelCalcNums.setText(self.nice_view(self.number_board))
+
+    def search(self):
+        global current_task, task_id
+        text = self.lineSearch.text()
+        try:
+            current_task = get(f'http://127.0.0.1:5000/api/get_task/{int(text)}').json()
+            self.post_task()
+            task_id = int(text)
+
+
+        except:
+            pass
 
     def special_operation(self, button=''):
         button = self.sender().text() if not button else button
@@ -125,39 +139,45 @@ class MathBattle(QMainWindow):
     def get_next_task(self):
         global task_id, current_task
         max_id = get('http://127.0.0.1:5000/api/get_count_of_task').json()
-        if task_id == max_id:
-            task_id = 1
-        else:
-            task_id += 1
-        if str(task_id) in str(
-                get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks']).split('%'):
-            self.get_next_task()
-        current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
-        self.post_task()
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
+        if (len(set(decided_tasks)) - 2) != max_id:
+            if task_id == max_id:
+                task_id = 1
+            else:
+                task_id += 1
+            if str(task_id) in str(decided_tasks):
+                self.get_next_task()
+            current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
+            self.post_task()
 
     def get_prev_task(self):
         global task_id, current_task
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
         max_id = get('http://127.0.0.1:5000/api/get_count_of_task').json()
-        if task_id == 1:
-            task_id = max_id
-        else:
-            task_id -= 1
-        if str(task_id) in str(get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks']):
-            self.get_prev_task()
-        current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
-        self.post_task()
+        if (len(set(decided_tasks)) - 2) != max_id:
+            if task_id == 1:
+                task_id = max_id
+            else:
+                task_id -= 1
+            if str(task_id) in str(get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks']):
+                self.get_prev_task()
+            current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
+            self.post_task()
 
     def run(self):
         self.label.setText('OK')
 
     def check_answer(self):
-        if self.lineAnswer.text() == current_task['answer']:
-            self.labelAnswStatus.setText('✓')
-            self.labelAnswStatus.setToolTip('Статус: зачтено')
-            put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_ID}/{task_id}')
-        else:
-            self.labelAnswStatus.setText('✕')
-            self.labelAnswStatus.setToolTip('Статус: неправельное решение')
+        global task_id, current_task
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
+        if not str(task_id) in decided_tasks:
+            if self.lineAnswer.text() == current_task['answer']:
+                self.labelAnswStatus.setText('✓')
+                self.labelAnswStatus.setToolTip('Статус: зачтено')
+                put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_ID}/{task_id}')
+            else:
+                self.labelAnswStatus.setText('✕')
+                self.labelAnswStatus.setToolTip('Статус: неправельное решение')
 
     def post_task(self):
         self.TextTask.setPlainText(current_task['content'])

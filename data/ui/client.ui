@@ -94,6 +94,11 @@
           <property name="toolTip">
            <string/>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid black;
+border-radius: 5px;
+</string>
+          </property>
           <property name="title">
            <string>Калькулятор:</string>
           </property>
@@ -119,6 +124,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>0</string>
@@ -147,6 +158,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>1</string>
            </property>
@@ -173,6 +190,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>4</string>
@@ -201,6 +224,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>/</string>
            </property>
@@ -228,6 +257,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>2</string>
            </property>
@@ -254,6 +289,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>3</string>
@@ -294,6 +335,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>8</string>
            </property>
@@ -320,6 +367,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>+</string>
@@ -357,6 +410,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>7</string>
            </property>
@@ -366,8 +425,8 @@
             <rect>
              <x>82</x>
              <y>106</y>
-             <width>39</width>
-             <height>32</height>
+             <width>41</width>
+             <height>31</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -383,6 +442,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>6</string>
@@ -411,6 +476,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>5</string>
            </property>
@@ -437,6 +508,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>*</string>
@@ -465,6 +542,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>=</string>
            </property>
@@ -492,6 +575,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>-</string>
            </property>
@@ -518,6 +607,12 @@
            </property>
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
            </property>
            <property name="text">
             <string>9</string>
@@ -609,6 +704,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>.</string>
            </property>
@@ -636,6 +737,12 @@
            <property name="cursor">
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
+           </property>
            <property name="text">
             <string>⌫</string>
            </property>
@@ -662,7 +769,8 @@
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">color: rgb(126, 126, 126);</string>
+            <string notr="true">color: rgb(126, 126, 126);
+border: 0;</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::NoFrame</enum>
@@ -728,6 +836,12 @@
              <height>20</height>
             </rect>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+font: 75 10pt &quot;MS Shell Dlg 2&quot;;
+
+border-radius: 5px;</string>
+           </property>
           </widget>
           <widget class="QPushButton" name="ButtonFindTask">
            <property name="geometry">
@@ -782,6 +896,10 @@
            <property name="toolTip">
             <string>Найти задачу по ID</string>
            </property>
+           <property name="styleSheet">
+            <string notr="true">border: 1px solid black;
+border-radius: 5px;  </string>
+           </property>
            <property name="text">
             <string>Найти</string>
            </property>
@@ -823,6 +941,10 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
+          <property name="styleSheet">
+           <string notr="true">border: 1px solid black;
+border-radius: 5px;</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::Box</enum>
           </property>
@@ -855,7 +977,8 @@
            <string>Выйти из аккаунта</string>
           </property>
           <property name="styleSheet">
-           <string notr="true"/>
+           <string notr="true">border: 1px solid black;
+border-radius: 5px;</string>
           </property>
           <property name="text">
            <string>Выйти</string>
@@ -864,6 +987,9 @@
         </item>
         <item row="0" column="0" rowspan="5">
          <widget class="QTabWidget" name="tabWidget">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -917,6 +1043,13 @@
             </property>
             <property name="toolTip">
              <string>ID задачи</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+
+</string>
             </property>
             <property name="frameShape">
              <enum>QFrame::Box</enum>
@@ -981,6 +1114,12 @@
             <property name="toolTip">
              <string>Колличество баллов за задачу</string>
             </property>
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+</string>
+            </property>
             <property name="frameShape">
              <enum>QFrame::Box</enum>
             </property>
@@ -1000,8 +1139,8 @@
            <widget class="QGroupBox" name="groupBox_3">
             <property name="geometry">
              <rect>
-              <x>10</x>
-              <y>380</y>
+              <x>0</x>
+              <y>390</y>
               <width>230</width>
               <height>91</height>
              </rect>
@@ -1049,6 +1188,10 @@
              </property>
              <property name="toolTip">
               <string>Поле для ответа</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid black;
+border-radius: 5px;  </string>
              </property>
             </widget>
             <widget class="QPushButton" name="ButtonSendAnswer">
@@ -1104,6 +1247,12 @@
              <property name="toolTip">
               <string>Проверить ответ</string>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+</string>
+             </property>
              <property name="text">
               <string>Проверить</string>
              </property>
@@ -1127,6 +1276,10 @@
              </property>
              <property name="toolTip">
               <string>Статус</string>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">border: 1px solid black;
+border-radius: 10px;  </string>
              </property>
              <property name="frameShape">
               <enum>QFrame::Panel</enum>
@@ -1233,6 +1386,13 @@
                  <pointsize>14</pointsize>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+
+</string>
+               </property>
                <property name="frameShape">
                 <enum>QFrame::Box</enum>
                </property>
@@ -1265,6 +1425,11 @@
                </property>
                <property name="toolTip">
                 <string>Пожаловаться на задачу</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
                </property>
                <property name="text">
                 <string>!</string>
@@ -1336,7 +1501,10 @@
                 <string>Предидущая задача</string>
                </property>
                <property name="styleSheet">
-                <string notr="true"/>
+                <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(200, 200, 200, 255), stop:1 rgba(255, 255, 255, 255));</string>
                </property>
                <property name="text">
                 <string>⮜</string>
@@ -1405,6 +1573,12 @@
                <property name="toolTip">
                 <string>Следующая задача</string>
                </property>
+               <property name="styleSheet">
+                <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(255, 255, 255, 255), stop:1 rgba(200, 200, 200, 200));</string>
+               </property>
                <property name="text">
                 <string>⮞</string>
                </property>
@@ -1434,6 +1608,11 @@
               <property name="toolTip">
                <string>Баллы</string>
               </property>
+              <property name="styleSheet">
+               <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
               </property>
@@ -1457,6 +1636,11 @@
               </property>
               <property name="toolTip">
                <string>Электронный адрес</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -1503,6 +1687,11 @@
               <property name="toolTip">
                <string>Имя</string>
               </property>
+              <property name="styleSheet">
+               <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
+              </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
               </property>
@@ -1535,6 +1724,11 @@
               </property>
               <property name="toolTip">
                <string>Статус</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
@@ -1576,6 +1770,11 @@
               </property>
               <property name="toolTip">
                <string>День рождения</string>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);</string>
               </property>
               <property name="frameShape">
                <enum>QFrame::Box</enum>
