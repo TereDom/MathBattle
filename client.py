@@ -1,11 +1,18 @@
 import sys
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
+from PyQt5.QtCore import Qt, QPoint, QCoreApplication
+from PyQt5.QtGui import QImage, QPainter, QPen
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog
 from requests import get, post, put
 
 task_id = 1
 USER_ID = 1
+
+
+def set_settings(window):
+    window.setStyleSheet("background-color: rgb(90, 90, 90);" if window.settings[0] == 'Тёмная&2'
+                         else "background-color: rgb(230, 230, 230);")
+    window.update()
 
 
 class MathBattle(QMainWindow):
@@ -15,6 +22,8 @@ class MathBattle(QMainWindow):
 
         uic.loadUi('data/ui/client.ui', self)
         current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
+        self.settings = open('data/settings.txt', 'r').read().split('\n')
+        set_settings(self)
         self.post_task()
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
@@ -50,7 +59,18 @@ class MathBattle(QMainWindow):
         self.Status.setText(user['status'])
         self.Email.setText(user['login'])
 
+        self.ButtonAccept.clicked.connect(self.accept)
+
+        self.radioButton_1_1.toggled.connect(self.onClicked)
+        self.radioButton_1_2.toggled.connect(self.onClicked)
+
+        self.new_settings = {}
+
+        for i in range(1, 2):
+            eval(f'self.radioButton_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
+
     # Калькулятор
+
     def num_operation(self, button=''):
         button = self.sender().text() if not button else button
         self.number_board += button
@@ -133,9 +153,11 @@ class MathBattle(QMainWindow):
     def check_answer(self):
         if self.lineAnswer.text() == current_task['answer']:
             self.labelAnswStatus.setText('✓')
+            self.labelAnswStatus.setToolTip('Статус: зачтено')
             put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_ID}/{task_id}')
         else:
             self.labelAnswStatus.setText('✕')
+            self.labelAnswStatus.setToolTip('Статус: неправельное решение')
 
     def post_task(self):
         self.TextTask.setPlainText(current_task['content'])
@@ -143,6 +165,21 @@ class MathBattle(QMainWindow):
         self.labelID.setText(f'ID: {current_task["id"]}')
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
+
+    # Настройки
+
+    def accept(self):
+        new_settings_list = open("data/settings.txt", "w")
+        new_settings_list.write('\n'.join(self.new_settings.values()))
+        new_settings_list.close()
+        self.settings = open("data/settings.txt", "r").read().split('\n')
+        set_settings(self)
+
+    def onClicked(self):
+        radioButton = self.sender()
+        if radioButton.isChecked():
+            txt = radioButton.objectName().split('_')
+            self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
 
     # обработка кнопок клавиатуры
 
@@ -163,7 +200,11 @@ class MathBattle(QMainWindow):
 # При кнопки на клавиатуре она как бы нажималась и в калькуляторе
 
 
-app = QApplication(sys.argv)
-ex = MathBattle()
-ex.show()
-sys.exit(app.exec_())
+def main():
+    app = QApplication(sys.argv)
+    ex = MathBattle()
+    ex.show()
+    sys.exit(app.exec_())
+
+
+main()
