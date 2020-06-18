@@ -62,13 +62,13 @@ class MathBattle(QMainWindow):
 
         self.ButtonAccept.clicked.connect(self.accept)
 
-        self.radioButton_1_1.toggled.connect(self.onClicked)
-        self.radioButton_1_2.toggled.connect(self.onClicked)
+        self.Button_1_1.toggled.connect(self.onClicked)
+        self.Button_1_2.toggled.connect(self.onClicked)
 
         self.new_settings = {}
 
         for i in range(1, 2):
-            eval(f'self.radioButton_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
+            eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
 
     # Калькулятор
 
