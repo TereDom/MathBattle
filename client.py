@@ -46,15 +46,14 @@ class LoginWindow(QWidget):
 
     def login(self):
         dct = {'id': 2, 'nickname': 'Dima', 'login': 'Dimka', 'status': 'ok', 'hashed_password': hash('123')}
-        print(post('http://127.0.0.1:5000/api/create_user', json=dct).json())
+        print(post('http://127.0.0.1:8080/api/create_user', json=dct).json())
         global USER
-
-        try:
-            USER = get(f'http://127.0.0.1:5000/api/user_information/{self.login_lineEdit}').json()
-            if USER['password'] == hash(self.password_lineEdit):
-                print('!!')
-        except:
-            self.error_label.setText('Ошибка: такого пользлователя не существует')
+        USER = get(f'http://127.0.0.1:8080/api/user_information/{self.login_lineEdit.text()}').json()
+        print(USER['hashed_password'], hash(self.password_lineEdit.text()))
+        if USER['hashed_password'] == hash(self.password_lineEdit.text()):
+            print('!!')
+         # except:
+         #     self.error_label.setText('Ошибка: такого пользлователя не существует')
 
     def go_back(self):
         self.preview_win = PreviewWindow()

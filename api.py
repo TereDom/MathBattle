@@ -70,6 +70,7 @@ def get_user_information(user_login):
     params['status'] = user.status
     params['decided_tasks'] = user.decided_tasks
     params['login'] = user.login
+    params['hashed_password'] = user.hashed_password
     params['birthday'] = user.birthday
     return jsonify(params)
 
