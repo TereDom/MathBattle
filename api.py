@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, jsonify
+from flask import Flask, Blueprint, jsonify, request
 from flask_restful import Api
 from data import db_session
 from data.__all_models import *
@@ -54,20 +54,35 @@ def get_count():
 def put_decided(user_id, task_id):
     session = db_session.create_session()
     user = session.query(User).filter(User.id == user_id).first()
-    print(user.nickname)
     user.decided_tasks = str(user.decided_tasks) + '%' + str(task_id)
     session.commit()
-    return ''
+    session.close()
+    return
 
 
-@blueprint.route('/api/user_information/<int:user_id>', methods=['GET'])
-def get_user_information(user_id):
+@blueprint.route('/api/user_information/<user_login>', methods=['GET'])
+def get_user_information(user_login):
     session = db_session.create_session()
-    user = session.query(User).filter(User.id == user_id).first()
+    user = session.query(User).filter(User.login == user_login).first()
     params = dict()
     params['id'] = user.id
     params['name'] = user.nickname
     params['status'] = user.status
     params['decided_tasks'] = user.decided_tasks
     params['login'] = user.login
+    params['birthday'] = user.birthday
     return jsonify(params)
+
+
+@blueprint.route('/api/create_user', methods=['POST'])
+def create_user():
+    session = db_session.create_session()
+    user = User(
+        nickname=request.json['nickname'],
+        login=request.json['login'],
+        status=request.json['status'],
+        hashed_password=request.json['hashed_password'],
+    )
+    session.add(user)
+    session.commit()
+    return jsonify({'success': 'OK'})

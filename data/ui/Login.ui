@@ -77,13 +77,13 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://ru.stackoverflow.com/q/851355/255866&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://vk.com/a.schukin2004&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>
    </property>
   </widget>
-  <widget class="QPushButton" name="LoginButton_2">
+  <widget class="QPushButton" name="LoginButton">
    <property name="geometry">
     <rect>
      <x>115</x>
@@ -116,7 +116,7 @@
     <string>Войти</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="return_home_Button">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -196,7 +196,7 @@ background-color: rgba(255, 255, 255, 10);</string>
     </font>
    </property>
    <property name="placeholderText">
-    <string>Email</string>
+    <string>Логин</string>
    </property>
   </widget>
   <widget class="QLineEdit" name="password_lineEdit">
@@ -219,8 +219,52 @@ background-color: rgba(255, 255, 255, 10);</string>
      <pointsize>10</pointsize>
     </font>
    </property>
+   <property name="echoMode">
+    <enum>QLineEdit::Password</enum>
+   </property>
+   <property name="dragEnabled">
+    <bool>false</bool>
+   </property>
+   <property name="readOnly">
+    <bool>false</bool>
+   </property>
    <property name="placeholderText">
     <string>Пароль</string>
+   </property>
+   <property name="cursorMoveStyle">
+    <enum>Qt::LogicalMoveStyle</enum>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="remembrMe_checkBox">
+   <property name="geometry">
+    <rect>
+     <x>115</x>
+     <y>160</y>
+     <width>101</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Запомнить меня</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="error_label">
+   <property name="geometry">
+    <rect>
+     <x>90</x>
+     <y>72</y>
+     <width>231</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::DefaultContextMenu</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(255, 0, 0);</string>
+   </property>
+   <property name="textFormat">
+    <enum>Qt::AutoText</enum>
    </property>
   </widget>
  </widget>

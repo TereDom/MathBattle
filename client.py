@@ -5,8 +5,11 @@ from PyQt5.QtGui import QImage, QPainter, QPen
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog
 from requests import get, post, put
 
+from data.__all_models import *
+from data import db_session
+
 task_id = 1
-USER_ID = 1
+USER = ''
 
 
 def set_settings(window):
@@ -15,7 +18,69 @@ def set_settings(window):
     window.update()
 
 
-class MathBattle(QMainWindow):
+class RegisterWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('data/ui/Register.ui', self)
+
+        self.RegButton.clicked.connect(self.reg)
+        self.return_home_Button.clicked.connect(self.go_back)
+
+    def reg(self):
+        pass
+
+    def go_back(self):
+        self.preview_win = PreviewWindow()
+        self.preview_win.show()
+        self.hide()
+
+
+class LoginWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        uic.loadUi('data/ui/Login.ui', self)
+
+        self.LoginButton.clicked.connect(self.login)
+        self.return_home_Button.clicked.connect(self.go_back)
+
+    def login(self):
+        dct = {'id': 2, 'nickname': 'Dima', 'login': 'Dimka', 'status': 'ok', 'hashed_password': hash('123')}
+        print(post('http://127.0.0.1:5000/api/create_user', json=dct).json())
+        global USER
+
+        try:
+            USER = get(f'http://127.0.0.1:5000/api/user_information/{self.login_lineEdit}').json()
+            if USER['password'] == hash(self.password_lineEdit):
+                print('!!')
+        except:
+            self.error_label.setText('Ошибка: такого пользлователя не существует')
+
+    def go_back(self):
+        self.preview_win = PreviewWindow()
+        self.preview_win.show()
+        self.hide()
+
+
+class PreviewWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('data/ui/PreviewRegisterWindow.ui', self)
+        self.RegButton.clicked.connect(self.open_reg_form)
+        self.LoginButton.clicked.connect(self.open_login_form)
+
+    def open_reg_form(self):
+        self.reg_form = RegisterWindow()
+        self.reg_form.show()
+        self.hide()
+
+    def open_login_form(self):
+        self.reg_form = LoginWindow()
+        self.reg_form.show()
+        self.hide()
+
+
+class MainWindow(QMainWindow):
     def __init__(self):
         global current_task
         super().__init__()
@@ -55,10 +120,9 @@ class MathBattle(QMainWindow):
         self.number_board = ''
 
         self.labelCalcNums.setText(self.nice_view(self.number_board))
-        user = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()
-        self.Nickname.setText(user['name'])
-        self.Status.setText(user['status'])
-        self.Email.setText(user['login'])
+        self.Nickname.setText(USER['name'])
+        self.Status.setText(USER['status'])
+        self.Email.setText(USER['login'])
 
         self.ButtonAccept.clicked.connect(self.accept)
 
@@ -67,7 +131,7 @@ class MathBattle(QMainWindow):
 
         self.new_settings = {}
 
-        for i in range(1, 2):
+        for i in range(1, 3):
             eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
 
     # Калькулятор
@@ -110,8 +174,6 @@ class MathBattle(QMainWindow):
             current_task = get(f'http://127.0.0.1:5000/api/get_task/{int(text)}').json()
             self.post_task()
             task_id = int(text)
-
-
         except:
             pass
 
@@ -139,7 +201,7 @@ class MathBattle(QMainWindow):
     def get_next_task(self):
         global task_id, current_task
         max_id = get('http://127.0.0.1:5000/api/get_count_of_task').json()
-        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_LOGIN}').json()['decided_tasks'].split('%')
         if (len(set(decided_tasks)) - 2) != max_id:
             if task_id == max_id:
                 task_id = 1
@@ -152,14 +214,14 @@ class MathBattle(QMainWindow):
 
     def get_prev_task(self):
         global task_id, current_task
-        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_LOGIN}').json()['decided_tasks'].split('%')
         max_id = get('http://127.0.0.1:5000/api/get_count_of_task').json()
         if (len(set(decided_tasks)) - 2) != max_id:
             if task_id == 1:
                 task_id = max_id
             else:
                 task_id -= 1
-            if str(task_id) in str(get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks']):
+            if str(task_id) in str(get(f'http://127.0.0.1:5000/api/user_information/{USER_LOGIN}').json()['decided_tasks']):
                 self.get_prev_task()
             current_task = get(f'http://127.0.0.1:5000/api/get_task/{task_id}').json()
             self.post_task()
@@ -169,12 +231,12 @@ class MathBattle(QMainWindow):
 
     def check_answer(self):
         global task_id, current_task
-        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_ID}').json()['decided_tasks'].split('%')
+        decided_tasks = get(f'http://127.0.0.1:5000/api/user_information/{USER_LOGIN}').json()['decided_tasks'].split('%')
         if not str(task_id) in decided_tasks:
             if self.lineAnswer.text() == current_task['answer']:
                 self.labelAnswStatus.setText('✓')
                 self.labelAnswStatus.setToolTip('Статус: зачтено')
-                put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_ID}/{task_id}')
+                put(f'http://127.0.0.1:5000/api/change_count_of_decided_tasks/{USER_LOGIN}/{task_id}')
             else:
                 self.labelAnswStatus.setText('✕')
                 self.labelAnswStatus.setToolTip('Статус: неправельное решение')
@@ -220,11 +282,7 @@ class MathBattle(QMainWindow):
 # При кнопки на клавиатуре она как бы нажималась и в калькуляторе
 
 
-def main():
-    app = QApplication(sys.argv)
-    ex = MathBattle()
-    ex.show()
-    sys.exit(app.exec_())
-
-
-main()
+app = QApplication(sys.argv)
+ex = PreviewWindow()
+ex.show()
+sys.exit(app.exec_())
