@@ -62,6 +62,7 @@ def put_decided(user_id, task_id):
 
 @blueprint.route('/api/user_information/<user_login>', methods=['GET'])
 def get_user_information(user_login):
+    print(user_login)
     session = db_session.create_session()
     user = session.query(User).filter(User.login == user_login).first()
     params = dict()

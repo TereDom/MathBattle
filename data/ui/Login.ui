@@ -251,9 +251,9 @@ background-color: rgba(255, 255, 255, 10);</string>
   <widget class="QLabel" name="error_label">
    <property name="geometry">
     <rect>
-     <x>90</x>
+     <x>80</x>
      <y>72</y>
-     <width>231</width>
+     <width>251</width>
      <height>21</height>
     </rect>
    </property>
