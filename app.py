@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, logout_user, login_required
 from data import db_session
 
 from data.__all_models import *
@@ -17,7 +17,7 @@ login_manager.init_app(app)
 
 
 def main():
-    app.run(host='127.0.0.1', port=5000)
+    app.run(host='127.0.0.1', port=8080)
 
 
 @login_manager.user_loader
@@ -30,7 +30,7 @@ def load_user(user_id):
 @app.route('/index')
 @app.route('/main')
 def index():
-    pass
+    return 'main'
 
 
 @app.route('/sign_up', methods=['GET', 'POST'])
@@ -59,7 +59,7 @@ def sign_up():
         user.set_password(form.password.data)
         session.add(user)
         session.commit()
-        return redirect('/login')
+        return redirect('/sign_in')
     return render_template(**param)
 
 
@@ -82,6 +82,13 @@ def sign_in():
         param['message'] = "Неправильный логин или пароль"
         return render_template(**param)
     return render_template(**param)
+
+
+@app.route('/sign_out')
+@login_required
+def sign_out():
+    logout_user()
+    return redirect("/")
 
 
 if __name__ == '__main__':

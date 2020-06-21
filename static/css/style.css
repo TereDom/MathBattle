@@ -96,6 +96,7 @@ main{
 }
 
 .search button:hover,
+.sign_out:hover,
 .sign_in:hover,
 .sign_up:hover{
     background: #ff8d00;
@@ -299,6 +300,7 @@ form #submit{
     cursor: pointer;
 }
 
+.footer_right_bar a:hover,
 form #submit:hover{
     background-color: #ff8d00;
 }
