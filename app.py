@@ -2,10 +2,11 @@ from flask import Flask, render_template, url_for, redirect
 from flask_login import LoginManager, login_user
 from data import db_session
 
-from api import *
-
 from data.__all_models import *
 from data.__all_forms import *
+
+from api import *
+import api
 
 
 db_session.global_init('db/DataBase.sqlite')
@@ -29,7 +30,37 @@ def load_user(user_id):
 @app.route('/index')
 @app.route('/main')
 def index():
-    return '<a href="/sign_in">sign_in</a>'
+    pass
+
+
+@app.route('/sign_up', methods=['GET', 'POST'])
+def sign_up():
+    form = RegisterForm()
+    param = dict()
+    param['form'] = form
+    param['title'] = 'Регистрация'
+    param['base_style_way'] = url_for('static', filename='css/style.css')
+    param['style_way'] = url_for('static', filename='css/sign_up.css')
+    param['template_name_or_list'] = 'sign_up.html'
+    param['message'] = ''
+    if form.validate_on_submit():
+        if form.password.data != form.password_again.data:
+            param['message'] = "Пароли не совпадают"
+            return render_template(**param)
+        session = db_session.create_session()
+        print(form.login.data)
+        if session.query(User).filter(User.login == str(form.login.data)).first():
+            param['message'] = "Такой пользователь уже есть"
+            return render_template(**param)
+        user = User(
+            name=form.name.data,
+            login=str(form.login.data)
+        )
+        user.set_password(form.password.data)
+        session.add(user)
+        session.commit()
+        return redirect('/login')
+    return render_template(**param)
 
 
 @app.route('/sign_in', methods=['GET', 'POST'])
