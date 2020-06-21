@@ -9,10 +9,9 @@ class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    # name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    status = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='user')
     points = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
     login = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # avatar = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='/default_avatar.png')
