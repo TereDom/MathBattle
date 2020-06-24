@@ -10,6 +10,7 @@ from data import db_session
 
 task_id = 1
 USER = ''
+task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
 
 
 def set_settings(window):
@@ -171,6 +172,7 @@ class MainWindow(QMainWindow):
         self.Nickname.setText(USER['name'])
         self.Nickname_small.setText(USER['name'])
         self.Status.setText(USER['status'])
+        self.Points.setText(str(USER['points']))
         self.Email.setText(USER["login"])
         self.labelBD.setText(USER['birthday'])
 
@@ -182,6 +184,8 @@ class MainWindow(QMainWindow):
         self.new_settings = {}
 
         self.ButtonExit.clicked.connect(self.exit_from_account)
+
+        self.add_task_pushButton.clicked.connect(self.add_task)
 
         for i in range(1, 2):
             eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
@@ -300,6 +304,7 @@ class MainWindow(QMainWindow):
         self.TextTask.setPlainText(current_task['content'])
         self.labelTitle.setText(current_task['name'])
         self.labelID.setText(f'ID: {current_task["id"]}')
+        self.ScoreLabel.setText(f'{current_task["points"]} баллов')
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
 
@@ -319,6 +324,20 @@ class MainWindow(QMainWindow):
         if radioButton.isChecked():
             txt = radioButton.objectName().split('_')
             self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
+
+    def add_task(self):
+        dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'], 'points': task_diff[self.difficult_lvl_comboBox.currentText()],
+               'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
+        try:
+            float(dct['answer'])
+        except ValueError:
+            self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
+            self.error_label.setText('Некорректный ответ (ответ должен быть представлен числом)')
+            return
+
+        self.error_label.setStyleSheet('color: rgb(0, 200, 0);')
+        self.error_label.setText('Задача успешно добавлена!')
+        post('http://127.0.0.1:8080/api/post_task', json=dct)
 
     # обработка кнопок клавиатуры
 
