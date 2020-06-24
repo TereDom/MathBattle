@@ -21,23 +21,23 @@ def get_task(task_id):
     params['name'] = task.name
     params['user_id'] = task.user_id
     params['content'] = task.content
+    params['points'] = task.points
     params['answer'] = task.answer
     return jsonify(params)
 
 
 @blueprint.route('/api/post_task', methods=['POST'])
 def post_task():
-    # Функцию post будем дорабатывать когда, когда уже напишем клиентскую часть
-    # Мы подставили конкретные данные для отладки
     session = db_session.create_session()
     last_task = session.query(Task).filter(Task.id).all()[-1]
 
     task = Task(
         id=last_task.id + 1,
-        name='Сложная задачка',
-        user_id=1,
-        content='Сколько будет 2 + 2 * 2',
-        answer='8')
+        name=request.json['name'],
+        points=request.json['points'],
+        user_id=request.json['user_id'],
+        content=request.json['content'],
+        answer=request.json['answer'])
 
     session.add(task)
     session.commit()
@@ -71,6 +71,7 @@ def get_user_information(user_login):
     params['status'] = user.status
     params['decided_tasks'] = user.decided_tasks
     params['login'] = user.login
+    params['points'] = user.points
     params['hashed_password'] = user.hashed_password
     params['birthday'] = user.birthday
     return jsonify(params)

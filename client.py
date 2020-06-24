@@ -10,6 +10,7 @@ from data import db_session
 
 task_id = 1
 USER = ''
+task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
 
 
 def set_settings(window):
@@ -57,11 +58,13 @@ class LoginWindow(QWidget):
         try:
             USER = get(f'http://127.0.0.1:8080/api/user_information/{self.login_lineEdit.text()}').json()
             if USER['hashed_password'] == self.password_lineEdit.text():
-                self.settings = open('data/settings.txt', 'a')
                 if self.remember:
-                    self.settings.write('\n')
-                    self.settings.write(USER['login'])
-                self.settings.close()
+                    lst = open('data/settings.txt', 'r').read().split('\n')
+                    lst.remove("'")
+                    lst.append(USER['login'])
+                    self.settings = open('data/settings.txt', 'w')
+                    self.settings.write('\n'.join(lst))
+                    self.settings.close()
                 self.main_form = MainWindow()
                 self.main_form.show()
                 self.close()
@@ -95,18 +98,25 @@ class PreviewWindow(QWidget):
         self.hide()
 
     def open_login_form(self):
-        self.log_form = LoginWindow()
-        self.log_form.show()
+        txt = open('data/settings.txt', 'r').read().split('\n')
+        if txt[-1] != "'":
+            self.ex = MainWindow()
+            self.ex.show()
+        else:
+            self.log_form = LoginWindow()
+            self.log_form.show()
         self.hide()
 
 
 class MainWindow(QMainWindow):
     """Форма главного окна"""
     def __init__(self):
-        global current_task
+        global current_task, USER
         super().__init__()
 
         uic.loadUi('data/ui/client.ui', self)
+        user_login = open("data/settings.txt", "r").read().split("\n")[-1]
+        USER = get(f'http://127.0.0.1:8080/api/user_information/{user_login}').json()
         current_task = get(f'http://127.0.0.1:8080/api/get_task/{task_id}').json()
         self.settings = open('data/settings.txt', 'r').read().split('\n')
         set_settings(self)
@@ -144,6 +154,7 @@ class MainWindow(QMainWindow):
         self.Nickname.setText(USER['name'])
         self.Nickname_small.setText(USER['name'])
         self.Status.setText(USER['status'])
+        self.Points.setText(str(USER['points']))
         self.Email.setText(USER["login"])
         self.labelBD.setText(USER['birthday'])
 
@@ -155,6 +166,8 @@ class MainWindow(QMainWindow):
         self.new_settings = {}
 
         self.ButtonExit.clicked.connect(self.exit_from_account)
+
+        self.add_task_pushButton.clicked.connect(self.add_task)
 
         for i in range(1, 2):
             eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
@@ -273,6 +286,7 @@ class MainWindow(QMainWindow):
         self.TextTask.setPlainText(current_task['content'])
         self.labelTitle.setText(current_task['name'])
         self.labelID.setText(f'ID: {current_task["id"]}')
+        self.ScoreLabel.setText(f'{current_task["points"]} баллов')
         self.labelAnswStatus.setText('')
         self.lineAnswer.setText('')
 
@@ -293,6 +307,20 @@ class MainWindow(QMainWindow):
             txt = radioButton.objectName().split('_')
             self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
 
+    def add_task(self):
+        dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'], 'points': task_diff[self.difficult_lvl_comboBox.currentText()],
+               'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
+        try:
+            float(dct['answer'])
+        except ValueError:
+            self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
+            self.error_label.setText('Некорректный ответ (ответ должен быть представлен числом)')
+            return
+
+        self.error_label.setStyleSheet('color: rgb(0, 200, 0);')
+        self.error_label.setText('Задача успешно добавлена!')
+        post('http://127.0.0.1:8080/api/post_task', json=dct)
+
     # обработка кнопок клавиатуры
 
     def keyPressEvent(self, event):
@@ -310,20 +338,17 @@ class MainWindow(QMainWindow):
 
     def exit_from_account(self):
         if self.settings[-1] == USER['login']:
-            self.write_settings = open("data/settings.txt", "w")
+            self.write_settings = open("data/settings.txt", "a")
             self.settings.remove(USER['login'])
+            self.settings.append("'")
             self.write_settings.write('\n'.join(self.settings))
             self.write_settings.close()
         self.preview = PreviewWindow()
         self.preview.show()
         self.hide()
 
+
 app = QApplication(sys.argv)
-txt = open('data/settings.txt', 'r').read().split('\n')
-try:
-    USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
-    ex = MainWindow()
-except:
-    ex = PreviewWindow()
+ex = PreviewWindow()
 ex.show()
 sys.exit(app.exec_())
