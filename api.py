@@ -83,8 +83,10 @@ def create_user():
         nickname=request.json['nickname'],
         login=request.json['login'],
         status=request.json['status'],
-        hashed_password=request.json['hashed_password'],
+        hashed_password=request.json['password'],
+        birthday=request.json['birthday']
     )
+    print(user)
     session.add(user)
     session.commit()
     return jsonify({'success': 'OK'})

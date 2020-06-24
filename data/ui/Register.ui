@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>312</height>
+    <width>397</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -223,7 +223,7 @@ background-color: rgba(255, 255, 255, 10);</string>
        </size>
       </property>
       <property name="text">
-       <string>Имя:</string>
+       <string>Nickname:</string>
       </property>
      </widget>
     </item>
@@ -343,6 +343,9 @@ background-color: rgba(255, 255, 255, 10);</string>
         <pointsize>10</pointsize>
        </font>
       </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
+      </property>
       <property name="placeholderText">
        <string/>
       </property>
@@ -366,6 +369,9 @@ background-color: rgba(255, 255, 255, 10);</string>
        <font>
         <pointsize>10</pointsize>
        </font>
+      </property>
+      <property name="echoMode">
+       <enum>QLineEdit::PasswordEchoOnEdit</enum>
       </property>
       <property name="placeholderText">
        <string/>

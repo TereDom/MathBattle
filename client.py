@@ -29,7 +29,29 @@ class RegisterWindow(QWidget):
         self.return_home_Button.clicked.connect(self.go_back)
 
     def reg(self):
-        """Дима, не забуть добавить комментарий, когда делать будешь)"""
+        global USER
+        if self.create_Password_lineEdit.text() == self.prove_Password_lineEdit.text():
+            if self.create_Nickname_lineEdit.text() and self.create_Email_lineEdit.text() and \
+                    self.create_Password_lineEdit.text():
+                if self.create_Email_lineEdit.text() != "'":
+                    user = dict()
+                    user['nickname'] = self.create_Nickname_lineEdit.text()
+                    user['login'] = self.create_Email_lineEdit.text()
+                    user['password'] = self.create_Password_lineEdit.text()
+                    user['birthday'] = str(self.dateEdit.text())
+                    user['status'] = 'student'
+                    post('http://127.0.0.1:8080/api/create_user', json=user)
+                    USER = get(f'http://127.0.0.1:8080/api/user_information/{self.create_Email_lineEdit.text()}').json()
+                    self.open_form = MainWindow()
+                    self.open_form.show()
+                    self.hide()
+                else:
+                    self.error_label.setText('Данные некорректны')
+
+            else:
+                self.error_label.setText('Обязательное поле не заполнено')
+        else:
+            self.error_label.setText('Пароли не совпадают')
         pass
 
     def go_back(self):
@@ -95,8 +117,13 @@ class PreviewWindow(QWidget):
         self.hide()
 
     def open_login_form(self):
-        self.log_form = LoginWindow()
-        self.log_form.show()
+        txt = open('data/settings.txt', 'r').read().split('\n')
+        if str(txt[-1]) != "'":
+            USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
+            self.open_form = MainWindow()
+        else:
+            self.open_form = LoginWindow()
+        self.open_form.show()
         self.hide()
 
 
@@ -318,12 +345,8 @@ class MainWindow(QMainWindow):
         self.preview.show()
         self.hide()
 
+
 app = QApplication(sys.argv)
-txt = open('data/settings.txt', 'r').read().split('\n')
-try:
-    USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
-    ex = MainWindow()
-except:
-    ex = PreviewWindow()
+ex = PreviewWindow()
 ex.show()
 sys.exit(app.exec_())
