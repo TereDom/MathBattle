@@ -80,11 +80,15 @@ class LoginWindow(QWidget):
         try:
             USER = get(f'http://127.0.0.1:8080/api/user_information/{self.login_lineEdit.text()}').json()
             if USER['hashed_password'] == self.password_lineEdit.text():
-                self.settings = open('data/settings.txt', 'a')
                 if self.remember:
-                    self.settings.write('\n')
-                    self.settings.write(USER['login'])
-                self.settings.close()
+                    txt = open('data/settings.txt', 'r').read().split('\n')
+                    txt.remove("'")
+                    txt.append(USER['login'])
+
+                    self.settings = open('data/settings.txt', 'w')
+
+                    self.settings.write('\n'.join(txt))
+                    self.settings.close()
                 self.main_form = MainWindow()
                 self.main_form.show()
                 self.close()
@@ -107,10 +111,18 @@ class LoginWindow(QWidget):
 class PreviewWindow(QWidget):
     """Форма приветственного окна"""
     def __init__(self):
+        global USER
         super().__init__()
         uic.loadUi('data/ui/PreviewRegisterWindow.ui', self)
         self.RegButton.clicked.connect(self.open_reg_form)
         self.LoginButton.clicked.connect(self.open_login_form)
+
+        txt = open('data/settings.txt', 'r').read().split('\n')
+        if str(txt[-1]) != "'":
+            USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
+            self.open_form = MainWindow()
+        else:
+            self.open_form = LoginWindow()
 
     def open_reg_form(self):
         self.reg_form = RegisterWindow()
@@ -118,12 +130,6 @@ class PreviewWindow(QWidget):
         self.hide()
 
     def open_login_form(self):
-        txt = open('data/settings.txt', 'r').read().split('\n')
-        if str(txt[-1]) != "'":
-            USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
-            self.open_form = MainWindow()
-        else:
-            self.open_form = LoginWindow()
         self.open_form.show()
         self.hide()
 
@@ -358,6 +364,7 @@ class MainWindow(QMainWindow):
         if self.settings[-1] == USER['login']:
             self.write_settings = open("data/settings.txt", "w")
             self.settings.remove(USER['login'])
+            self.settings.append("'")
             self.write_settings.write('\n'.join(self.settings))
             self.write_settings.close()
         self.preview = PreviewWindow()

@@ -50,10 +50,10 @@ def get_count():
     return jsonify(count)
 
 
-@blueprint.route('/api/change_count_of_decided_tasks/<int:user_id>/<int:task_id>', methods=['PUT'])
-def put_decided(user_id, task_id):
+@blueprint.route('/api/change_count_of_decided_tasks/<user_login>/<int:task_id>', methods=['PUT'])
+def put_decided(user_login, task_id):
     session = db_session.create_session()
-    user = session.query(User).filter(User.id == user_id).first()
+    user = session.query(User).filter(User.login == user_login).first()
     user.decided_tasks = str(user.decided_tasks) + '%' + str(task_id)
     session.commit()
     session.close()
