@@ -148,8 +148,7 @@ class MainWindow(QMainWindow):
 
         self.decidedTasks.setColumnCount(3)
         self.decidedTasks.setHorizontalHeaderLabels(['ID', 'Название задачи', 'Получено баллов'])
-        self.decidedTasks.resizeColumnsToContents()
-        self.decidedTasks.resizeRowsToContents()
+        self.decidedTasks.horizontalHeader().setDefaultSectionSize(143)
         n_tasks = USER['decided_tasks'].split('%')[1:]
         self.decidedTasks.setRowCount(len(n_tasks))
         i = 0

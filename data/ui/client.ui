@@ -1817,6 +1817,12 @@ background-color: rgb(211, 211, 211);</string>
                </property>
                <item row="0" column="0">
                 <widget class="QTableWidget" name="decidedTasks">
+                 <property name="verticalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAlwaysOn</enum>
+                 </property>
+                 <property name="horizontalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAsNeeded</enum>
+                 </property>
                  <attribute name="horizontalHeaderMinimumSectionSize">
                   <number>0</number>
                  </attribute>
