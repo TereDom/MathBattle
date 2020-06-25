@@ -43,6 +43,15 @@ def post_task():
     session.commit()
 
 
+@blueprint.route('/api/change_points/<user_login>/<int:points>', methods=['PUT'])
+def change_points(user_login, points):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.login == user_login).first()
+    user.points += points
+    session.commit()
+    session.close()
+
+
 @blueprint.route('/api/get_count_of_task', methods=['GET'])
 def get_count():
     session = db_session.create_session()

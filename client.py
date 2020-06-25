@@ -175,12 +175,7 @@ class MainWindow(QMainWindow):
         self.number_board = ''
 
         self.labelCalcNums.setText(self.nice_view(self.number_board))
-        self.Nickname.setText(USER['name'])
-        self.Nickname_small.setText(USER['name'])
-        self.Status.setText(USER['status'])
-        self.Points.setText(str(USER['points']))
-        self.Email.setText(USER["login"])
-        self.labelBD.setText(USER['birthday'])
+        self.update_profile()
 
         self.ButtonAccept.clicked.connect(self.accept)
 
@@ -205,6 +200,19 @@ class MainWindow(QMainWindow):
         self.number_board = str(int(self.number_board)) \
             if '.' not in self.number_board else str(float(self.number_board))
         self.labelCalcNums.setText(self.nice_view(self.number_board))
+
+    def update_profile(self):
+        """Функция обновления профиля"""
+        global USER
+
+        USER = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()
+        self.labelCalcNums.setText(self.nice_view(self.number_board))
+        self.Nickname.setText(USER['name'])
+        self.Nickname_small.setText(USER['name'])
+        self.Status.setText(USER['status'])
+        self.Points.setText(str(USER['points']))
+        self.Email.setText(USER["login"])
+        self.labelBD.setText(USER['birthday'])
 
     def arithmetic_operation(self, button=''):
         """Функция обрабатывает арифметические знаки и точку"""
@@ -302,6 +310,9 @@ class MainWindow(QMainWindow):
                 self.labelAnswStatus.setText('✓')
                 self.labelAnswStatus.setToolTip('Статус: зачтено')
                 put(f'http://127.0.0.1:8080/api/change_count_of_decided_tasks/{USER["login"]}/{task_id}')
+                put(f'http://127.0.0.1:8080/api/change_points/{USER["login"]}/{current_task["points"]}')
+                self.update_profile()
+
             else:
                 self.labelAnswStatus.setText('✕')
                 self.labelAnswStatus.setToolTip('Статус: неправельное решение')
