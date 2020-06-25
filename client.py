@@ -214,6 +214,14 @@ class MainWindow(QMainWindow):
         self.Email.setText(USER["login"])
         self.labelBD.setText(USER['birthday'])
 
+        if USER['points'] < 150:
+            self.AddTaskPage.setEnabled(False)
+            self.permission_label.setText('Для доступа к добавлению задач необходимо набрать 150 баллов')
+
+        else:
+            self.AddTaskPage.setEnabled(True)
+            self.permission_label.clear()
+
     def arithmetic_operation(self, button=''):
         """Функция обрабатывает арифметические знаки и точку"""
         button = self.sender().text() if not button else button
@@ -343,13 +351,21 @@ class MainWindow(QMainWindow):
             self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
 
     def add_task(self):
-        dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'], 'points': task_diff[self.difficult_lvl_comboBox.currentText()],
+        dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'],
+               'points': task_diff[self.difficult_lvl_comboBox.currentText()],
                'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
         try:
+            if not (self.title_lineEdit.text() and
+                    self.task_text_TextEdit.toPlainText() and self.answer_lineEdit.text()):
+                raise NameError()
             float(dct['answer'])
         except ValueError:
             self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
             self.error_label.setText('Некорректный ответ (ответ должен быть представлен числом)')
+            return
+        except NameError:
+            self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
+            self.error_label.setText('Все поля должны быть заполнены')
             return
 
         self.error_label.setStyleSheet('color: rgb(0, 200, 0);')
