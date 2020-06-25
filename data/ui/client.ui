@@ -1567,6 +1567,76 @@ background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgb
              <string>⮜</string>
             </property>
            </widget>
+           <widget class="QLabel" name="labelAuthor">
+            <property name="geometry">
+             <rect>
+              <x>220</x>
+              <y>36</y>
+              <width>381</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>500</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>200</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>200</width>
+              <height>21</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+            <property name="toolTip">
+             <string>ID задачи</string>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border: 1px solid black;
+border-radius: 5px;
+background-color: rgb(211, 211, 211);
+
+</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::Box</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <property name="lineWidth">
+             <number>1</number>
+            </property>
+            <property name="midLineWidth">
+             <number>0</number>
+            </property>
+            <property name="text">
+             <string>Автор </string>
+            </property>
+           </widget>
           </widget>
           <widget class="QWidget" name="ProfilePage">
            <attribute name="title">
@@ -1730,8 +1800,51 @@ background-color: rgb(211, 211, 211);</string>
                <string>Решённые задачи:</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
+               <property name="leftMargin">
+                <number>6</number>
+               </property>
+               <property name="topMargin">
+                <number>5</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
+               <property name="bottomMargin">
+                <number>5</number>
+               </property>
+               <property name="spacing">
+                <number>0</number>
+               </property>
                <item row="0" column="0">
-                <widget class="QListView" name="decidedTasks"/>
+                <widget class="QTableWidget" name="decidedTasks">
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>151</number>
+                 </attribute>
+                 <attribute name="verticalHeaderMinimumSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>
