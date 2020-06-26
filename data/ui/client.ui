@@ -1640,6 +1640,22 @@ background-color: rgb(211, 211, 211);
              <string>Автор </string>
             </property>
            </widget>
+           <widget class="QLabel" name="warningLabel">
+            <property name="geometry">
+             <rect>
+              <x>20</x>
+              <y>580</y>
+              <width>231</width>
+              <height>21</height>
+             </rect>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 0, 0);</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </widget>
           <widget class="QWidget" name="ProfilePage">
            <attribute name="title">
