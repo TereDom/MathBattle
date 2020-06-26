@@ -83,6 +83,24 @@ def get_user_information(user_login):
     params['points'] = user.points
     params['hashed_password'] = user.hashed_password
     params['birthday'] = user.birthday
+    params['reports'] = user.reports
+    return jsonify(params)
+
+
+@blueprint.route('/api/author_information/<int:user_id>', methods=['GET'])
+def get_author_information(user_id):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.id == user_id).first()
+    params = dict()
+    params['id'] = user.id
+    params['name'] = user.nickname
+    params['status'] = user.status
+    params['decided_tasks'] = user.decided_tasks
+    params['login'] = user.login
+    params['points'] = user.points
+    params['hashed_password'] = user.hashed_password
+    params['birthday'] = user.birthday
+
     return jsonify(params)
 
 
@@ -100,3 +118,34 @@ def create_user():
     session.add(user)
     session.commit()
     return jsonify({'success': 'OK'})
+
+
+@blueprint.route('/api/change_reported_tasks/<user_login>/<int:task_id>', methods=['PUT'])
+def change_reported(user_login, task_id):
+    print(user_login, task_id)
+    session = db_session.create_session()
+    user = session.query(User).filter(User.login == user_login).first()
+    user.reports = str(user.reports) + '%' + str(task_id)
+    task = session.query(Task).filter(Task.id == task_id).first()
+    task.reports += 1
+    session.commit()
+    session.close()
+    return
+
+
+@blueprint.route('/api/delete_task/<int:task_id>', methods=['DELETE'])
+def delete_task(task_id):
+    session = db_session.create_session()
+    news = session.query(Task).get(task_id)
+    if not news:
+        return jsonify({'error': 'Not found'})
+    session.delete(news)
+    session.commit()
+    return jsonify({'success': 'OK'})
+
+
+
+
+
+
+

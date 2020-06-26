@@ -19,6 +19,7 @@ class User(SqlAlchemyBase, UserMixin):
     hashed_password = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     decided_tasks = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='%0')
     birthday = sqlalchemy.Column(sqlalchemy.String, default='01.01.2000')
+    reports = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='%0')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)

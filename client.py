@@ -8,7 +8,7 @@ from requests import get, post, put
 from data.__all_models import *
 from data import db_session
 
-task_id = 1
+task_id = 2
 USER = ''
 task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
 
@@ -150,6 +150,7 @@ class MainWindow(QMainWindow):
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
         self.ButtonFindTask.clicked.connect(self.search)
+        self.reportButton.clicked.connect(self.report)
 
         self.OneCalcButton.clicked.connect(self.num_operation)
         self.TwoCalcButton.clicked.connect(self.num_operation)
@@ -293,6 +294,11 @@ class MainWindow(QMainWindow):
             current_task = get(f'http://127.0.0.1:8080/api/get_task/{task_id}').json()
             self.post_task()
 
+    def report(self):
+        global USER, current_task
+        if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['reports'].split('%'):
+            put(f'http://127.0.0.1:8080/api/change_reported_tasks/{USER["login"]}/{current_task["id"]}')
+
     def get_prev_task(self):
         global task_id, current_task
         decided_tasks = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks'].split('%')
@@ -312,25 +318,32 @@ class MainWindow(QMainWindow):
 
     def check_answer(self):
         global task_id, current_task
-        decided_tasks = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks'].split('%')
-        if not str(task_id) in decided_tasks:
-            if self.lineAnswer.text() == current_task['answer']:
-                self.labelAnswStatus.setText('✓')
-                self.labelAnswStatus.setToolTip('Статус: зачтено')
-                put(f'http://127.0.0.1:8080/api/change_count_of_decided_tasks/{USER["login"]}/{task_id}')
-                put(f'http://127.0.0.1:8080/api/change_points/{USER["login"]}/{current_task["points"]}')
-                self.update_profile()
 
+        decided_tasks = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks'].split('%')
+        if current_task["user_id"] != USER["id"]:
+            if str(current_task["id"]) not in decided_tasks:
+                if self.lineAnswer.text() == current_task['answer']:
+                    self.labelAnswStatus.setText('✓')
+                    self.labelAnswStatus.setToolTip('Статус: зачтено')
+                    put(f'http://127.0.0.1:8080/api/change_count_of_decided_tasks/{USER["login"]}/{task_id}')
+                    put(f'http://127.0.0.1:8080/api/change_points/{USER["login"]}/{current_task["points"]}')
+                    self.update_profile()
+                else:
+                    self.labelAnswStatus.setText('✕')
+                    self.labelAnswStatus.setToolTip('Статус: неправельное решение')
             else:
-                self.labelAnswStatus.setText('✕')
-                self.labelAnswStatus.setToolTip('Статус: неправельное решение')
+                self.warningLabel.setText("Вы уже решили эту задачу")
+        else:
+            self.warningLabel.setText("Вы не можете решить свою же задачу")
 
     def post_task(self):
         self.TextTask.setPlainText(current_task['content'])
         self.labelTitle.setText(current_task['name'])
         self.labelID.setText(f'ID: {current_task["id"]}')
         self.ScoreLabel.setText(f'{current_task["points"]} баллов')
+        self.labelAuthor.setText('Автор: ' + get(f'http://127.0.0.1:8080/api/author_information/{current_task["user_id"]}').json()["name"])
         self.labelAnswStatus.setText('')
+        self.warningLabel.setText('')
         self.lineAnswer.setText('')
 
     # Настройки
