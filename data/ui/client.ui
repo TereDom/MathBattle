@@ -1640,22 +1640,6 @@ background-color: rgb(211, 211, 211);
              <string>Автор </string>
             </property>
            </widget>
-           <widget class="QLabel" name="warningLabel">
-            <property name="geometry">
-             <rect>
-              <x>20</x>
-              <y>580</y>
-              <width>221</width>
-              <height>16</height>
-             </rect>
-            </property>
-            <property name="styleSheet">
-             <string notr="true">color: rgb(255, 0, 0);</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
           </widget>
           <widget class="QWidget" name="ProfilePage">
            <attribute name="title">
@@ -1819,8 +1803,57 @@ background-color: rgb(211, 211, 211);</string>
                <string>Решённые задачи:</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
+               <property name="leftMargin">
+                <number>6</number>
+               </property>
+               <property name="topMargin">
+                <number>5</number>
+               </property>
+               <property name="rightMargin">
+                <number>6</number>
+               </property>
+               <property name="bottomMargin">
+                <number>5</number>
+               </property>
+               <property name="spacing">
+                <number>0</number>
+               </property>
                <item row="0" column="0">
-                <widget class="QListView" name="decidedTasks"/>
+                <widget class="QTableWidget" name="decidedTasks">
+                 <property name="verticalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAlwaysOn</enum>
+                 </property>
+                 <property name="horizontalScrollBarPolicy">
+                  <enum>Qt::ScrollBarAsNeeded</enum>
+                 </property>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>151</number>
+                 </attribute>
+                 <attribute name="verticalHeaderMinimumSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>0</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>New Column</string>
+                  </property>
+                 </column>
+                </widget>
                </item>
               </layout>
              </widget>

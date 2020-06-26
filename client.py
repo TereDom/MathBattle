@@ -2,7 +2,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QPoint, QCoreApplication
 from PyQt5.QtGui import QImage, QPainter, QPen
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QTableWidgetItem
 from requests import get, post, put
 
 from data.__all_models import *
@@ -146,6 +146,18 @@ class MainWindow(QMainWindow):
         set_settings(self)
         self.post_task()
 
+        self.decidedTasks.setColumnCount(3)
+        self.decidedTasks.setHorizontalHeaderLabels(['ID', 'Название задачи', 'Получено баллов'])
+        self.decidedTasks.horizontalHeader().setDefaultSectionSize(143)
+        n_tasks = USER['decided_tasks'].split('%')[1:]
+        self.decidedTasks.setRowCount(len(n_tasks))
+        i = 0
+        for j in n_tasks:
+            if j != '':
+                task = get(f'http://127.0.0.1:8080/api/get_task/{j}').json()
+                self.update_decidedTasks(i, task)
+                i += 1
+
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
@@ -202,6 +214,12 @@ class MainWindow(QMainWindow):
             if '.' not in self.number_board else str(float(self.number_board))
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
+    def update_decidedTasks(self, last_section, current_task):
+        self.decidedTasks.setRowCount(last_section + 1)
+        self.decidedTasks.setItem(last_section, 0, QTableWidgetItem(str(current_task['id'])))
+        self.decidedTasks.setItem(last_section, 1, QTableWidgetItem(current_task['name']))
+        self.decidedTasks.setItem(last_section, 2, QTableWidgetItem("+" + str(current_task['points'])))
+
     def update_profile(self):
         """Функция обновления профиля"""
         global USER
@@ -218,7 +236,6 @@ class MainWindow(QMainWindow):
         if USER['points'] < 150:
             self.AddTaskPage.setEnabled(False)
             self.permission_label.setText('Для доступа к добавлению задач необходимо набрать 150 баллов')
-
         else:
             self.AddTaskPage.setEnabled(True)
             self.permission_label.clear()
@@ -328,6 +345,7 @@ class MainWindow(QMainWindow):
                     put(f'http://127.0.0.1:8080/api/change_count_of_decided_tasks/{USER["login"]}/{task_id}')
                     put(f'http://127.0.0.1:8080/api/change_points/{USER["login"]}/{current_task["points"]}')
                     self.update_profile()
+                    self.update_decidedTasks(len(USER['decided_tasks'].split('%')) - 2, current_task)
                 else:
                     self.labelAnswStatus.setText('✕')
                     self.labelAnswStatus.setToolTip('Статус: неправельное решение')
