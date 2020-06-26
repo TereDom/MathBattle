@@ -83,12 +83,12 @@ class LoginWindow(QWidget):
                 if self.remember:
                     txt = open('data/settings.txt', 'r').read().split('\n')
                     txt.remove("'")
-                    txt.append(USER['login'])
+                    txt.insert(2, USER['login'])
 
                     self.settings = open('data/settings.txt', 'w')
-
                     self.settings.write('\n'.join(txt))
                     self.settings.close()
+
                 self.main_form = MainWindow()
                 self.main_form.show()
                 self.close()
@@ -118,8 +118,8 @@ class PreviewWindow(QWidget):
         self.LoginButton.clicked.connect(self.open_login_form)
 
         txt = open('data/settings.txt', 'r').read().split('\n')
-        if str(txt[-1]) != "'":
-            USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-1]}').json()
+        if str(txt[-2]) != "'":
+            USER = get(f'http://127.0.0.1:8080/api/user_information/{txt[-2]}').json()
             self.open_form = MainWindow()
         else:
             self.open_form = LoginWindow()
@@ -141,9 +141,9 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         uic.loadUi('data/ui/client.ui', self)
-        current_task = get(f'http://127.0.0.1:8080/api/get_task/{task_id}').json()
         self.settings = open('data/settings.txt', 'r').read().split('\n')
         set_settings(self)
+        current_task = get(f'http://127.0.0.1:8080/api/get_task/{self.settings[-1]}').json()
         self.post_task()
 
         self.decidedTasks.setColumnCount(3)
@@ -194,6 +194,7 @@ class MainWindow(QMainWindow):
 
         self.Button_1_1.toggled.connect(self.onClicked)
         self.Button_1_2.toggled.connect(self.onClicked)
+        # self.Button_2_1.toggled.connect(self.onClicked)
 
         self.new_settings = {}
 
@@ -203,6 +204,7 @@ class MainWindow(QMainWindow):
 
         for i in range(1, 2):
             eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
+        # self.Button_2_1.setChecked(self.settings[2] == 'Отображать решённые задачи')
 
     # Калькулятор
 
@@ -298,7 +300,8 @@ class MainWindow(QMainWindow):
     # Работа с сервером
 
     def get_next_task(self):
-        global task_id, current_task
+        global current_task
+        task_id = current_task['id']
         max_id = get('http://127.0.0.1:8080/api/get_count_of_task').json()
         decided_tasks = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks'].split('%')
         if (len(set(decided_tasks)) - 2) != max_id:
@@ -306,9 +309,11 @@ class MainWindow(QMainWindow):
                 task_id = 1
             else:
                 task_id += 1
-            if str(task_id) in str(decided_tasks):
-                self.get_next_task()
             current_task = get(f'http://127.0.0.1:8080/api/get_task/{task_id}').json()
+            # if str(task_id) in str(decided_tasks):
+            #     self.lineAnswer.setText(current_task['answer'])
+            #     self.labelAnswStatus.setText('✓')
+            #     self.labelAnswStatus.setToolTip('Статус: зачтено')
             self.post_task()
 
     def report(self):
@@ -317,7 +322,8 @@ class MainWindow(QMainWindow):
             put(f'http://127.0.0.1:8080/api/change_reported_tasks/{USER["login"]}/{current_task["id"]}')
 
     def get_prev_task(self):
-        global task_id, current_task
+        global current_task
+        task_id = current_task['id']
         decided_tasks = get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks'].split('%')
         max_id = get('http://127.0.0.1:8080/api/get_count_of_task').json()
         if (len(set(decided_tasks)) - 2) != max_id:
@@ -325,9 +331,11 @@ class MainWindow(QMainWindow):
                 task_id = max_id
             else:
                 task_id -= 1
-            if str(task_id) in str(get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks']):
-                self.get_prev_task()
             current_task = get(f'http://127.0.0.1:8080/api/get_task/{task_id}').json()
+            # if str(task_id) in str(get(f'http://127.0.0.1:8080/api/user_information/{USER["login"]}').json()['decided_tasks']):
+            #     self.lineAnswer.setText(current_task['answer'])
+            #     self.labelAnswStatus.setText('✓')
+            #     self.labelAnswStatus.setToolTip('Статус: зачтено')
             self.post_task()
 
     def run(self):
@@ -355,14 +363,28 @@ class MainWindow(QMainWindow):
             self.warningLabel.setText("Вы не можете решить свою же задачу")
 
     def post_task(self):
+        global current_task
+        txt = open('data/settings.txt', 'r').read().split('\n')
+        txt.remove(txt[-1])
+        txt.insert(3, str(current_task["id"]))
+
+        new_settings = open('data/settings.txt', 'w')
+        new_settings.write('\n'.join(txt))
+        new_settings.close()
+
         self.TextTask.setPlainText(current_task['content'])
         self.labelTitle.setText(current_task['name'])
         self.labelID.setText(f'ID: {current_task["id"]}')
         self.ScoreLabel.setText(f'{current_task["points"]} баллов')
         self.labelAuthor.setText('Автор: ' + get(f'http://127.0.0.1:8080/api/author_information/{current_task["user_id"]}').json()["name"])
-        self.labelAnswStatus.setText('')
-        self.warningLabel.setText('')
-        self.lineAnswer.setText('')
+        if str(current_task["id"]) in str(USER['decided_tasks']):
+            self.lineAnswer.setText(current_task['answer'])
+            self.labelAnswStatus.setText('✓')
+            self.labelAnswStatus.setToolTip('Статус: зачтено')
+        else:
+            self.lineAnswer.setText('')
+            self.labelAnswStatus.setText('')
+            self.labelAnswStatus.setToolTip('Статус')
 
     # Настройки
 
@@ -376,10 +398,10 @@ class MainWindow(QMainWindow):
         set_settings(self)
 
     def onClicked(self):
-        radioButton = self.sender()
-        if radioButton.isChecked():
-            txt = radioButton.objectName().split('_')
-            self.new_settings[txt[1]] = radioButton.text() + '&' + txt[2]
+        Button = self.sender()
+        if Button.isChecked():
+            txt = Button.objectName().split('_')
+            self.new_settings[txt[1]] = Button.text() + '&' + txt[2]
 
     def add_task(self):
         dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'],
@@ -419,12 +441,15 @@ class MainWindow(QMainWindow):
             self.special_operation('⌫')
 
     def exit_from_account(self):
-        if self.settings[-1] == USER['login']:
-            self.write_settings = open("data/settings.txt", "w")
+        if self.settings[-2] == USER['login']:
             self.settings.remove(USER['login'])
-            self.settings.append("'")
+            self.settings.remove(self.settings[-1])
+            self.settings.insert(2, "'")
+            self.settings.insert(3, str(current_task['id']))
+            self.write_settings = open("data/settings.txt", "w")
             self.write_settings.write('\n'.join(self.settings))
             self.write_settings.close()
+
         self.preview = PreviewWindow()
         self.preview.show()
         self.hide()
