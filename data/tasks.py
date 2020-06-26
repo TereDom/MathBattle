@@ -13,5 +13,5 @@ class Task(SqlAlchemyBase, UserMixin):
     answer = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     points = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
     reports = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
-    user_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey('users.id'))
+    user_login = sqlalchemy.Column(sqlalchemy.String, sqlalchemy.ForeignKey('users.login'))
     user = orm.relation('User')
