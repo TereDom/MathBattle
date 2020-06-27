@@ -24,9 +24,9 @@ class UserResource(Resource):
         user = session.query(User).filter(User.login == user_login).first()
         if int(decided):
             print(decided)
-            user.decided_tasks = user.decided_tasks + decided + '%'
+            user.decided_tasks += '%' + decided
         if int(reported):
-            user.reports = user.reports + reported + '%'
+            user.reports += '%' + reported
             print(reported)
         user.points += points
         session.commit()
@@ -51,9 +51,7 @@ class UserResource(Resource):
 
 class UserListResource(Resource):
     def post(self):
-        print(1)
         args = parser.parse_args()
-        print(args)
         session = db_session.create_session()
         user = User(
             nickname=args['nickname'],
@@ -64,7 +62,3 @@ class UserListResource(Resource):
         session.add(user)
         session.commit()
         return jsonify({'success': 'OK'})
-
-
-
-

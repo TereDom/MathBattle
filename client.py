@@ -4,11 +4,21 @@ from PyQt5.QtCore import Qt, QPoint, QCoreApplication
 from PyQt5.QtGui import QImage, QPainter, QPen
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QTableWidgetItem
 from requests import get, post, put
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from data.__all_models import *
 from data import db_session
 
-task_id = 2
+
+def set_password(password):
+    hashed_password = generate_password_hash(password)
+    return hashed_password
+
+
+def check_password(self, password):
+    return check_password_hash(self.hashed_password, password)
+
+
 USER = ''
 task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
 
@@ -38,9 +48,10 @@ class RegisterWindow(QWidget):
                     user = dict()
                     user['nickname'] = self.create_Nickname_lineEdit.text()
                     user['login'] = self.create_Email_lineEdit.text()
-                    user['hashed_password'] = self.create_Password_lineEdit.text()
+                    user['hashed_password'] = set_password(self.create_Password_lineEdit.text())
                     user['birthday'] = str(self.dateEdit.text())
                     user['status'] = 'student'
+                    post('http://127.0.0.1:8080/api/user', json=user)
                     USER = get(f'http://127.0.0.1:8080/api/users/{self.create_Email_lineEdit.text()}').json()
                     self.open_form = MainWindow()
                     self.open_form.show()
@@ -78,11 +89,11 @@ class LoginWindow(QWidget):
         global USER
         try:
             USER = get(f'http://127.0.0.1:8080/api/users/{self.login_lineEdit.text()}').json()
-            if USER['hashed_password'] == self.password_lineEdit.text():
+            if check_password_hash(USER['hashed_password'], self.password_lineEdit.text()):
                 if self.remember:
                     txt = open('data/settings.txt', 'r').read().split('\n')
                     txt.remove("'")
-                    txt.insert(2, USER['login'])
+                    txt.insert(1, USER['login'])
 
                     self.settings = open('data/settings.txt', 'w')
                     self.settings.write('\n'.join(txt))
@@ -118,7 +129,7 @@ class PreviewWindow(QWidget):
 
         txt = open('data/settings.txt', 'r').read().split('\n')
         if str(txt[-2]) != "'":
-            USER = get(f'http://127.0.0.1:8080/api/users/{txt[-1]}').json()
+            USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
             self.open_form = MainWindow()
         else:
             self.open_form = LoginWindow()
@@ -139,9 +150,9 @@ class MainWindow(QMainWindow):
         global current_task
         super().__init__()
 
-        uic.loadUi('data/ui/client.ui', self)
-        current_task = get(f'http://127.0.0.1:8080/api/task/{task_id}').json()
         self.settings = open('data/settings.txt', 'r').read().split('\n')
+        uic.loadUi('data/ui/client.ui', self)
+        current_task = get(f'http://127.0.0.1:8080/api/task/{self.settings[-1]}').json()
         set_settings(self)
         self.post_task()
 
@@ -152,10 +163,9 @@ class MainWindow(QMainWindow):
         self.decidedTasks.setRowCount(len(n_tasks))
         i = 0
         for j in n_tasks:
-            if j != '':
-                task = get(f'http://127.0.0.1:8080/api/task/{j}').json()
-                self.update_decidedTasks(i, task)
-                i += 1
+            task = get(f'http://127.0.0.1:8080/api/task/{j if not j else 1}').json()
+            self.update_decidedTasks(i, task)
+            i += 1
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
@@ -246,7 +256,7 @@ class MainWindow(QMainWindow):
         button = self.sender().text() if not button else button
         if button == '.':
             try:
-                test = eval(self.number_board + '.')
+                eval(self.number_board + '.')
                 self.number_board += button
                 self.labelCalcNums.setText(self.nice_view(self.number_board))
             except:
@@ -287,12 +297,11 @@ class MainWindow(QMainWindow):
 
     def search(self):
         """Функция ищет задачу по id, который ввёл пользователь"""
-        global current_task, task_id
+        global current_task
         text = self.lineSearch.text()
         try:
             current_task = get(f'http://127.0.0.1:8080/api/task/{int(text)}').json()
             self.post_task()
-            task_id = int(text)
         except:
             pass
 
@@ -318,7 +327,7 @@ class MainWindow(QMainWindow):
     def report(self):
         global USER, current_task
         if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['reports'].split('%'):
-            put(f'http://127.0.0.1:8080/api/users/dimasik', data={'decided': 0, 'reported': 1, 'points': 0})
+            put(f'http://127.0.0.1:8080/api/users/{USER["login"]}', data={'decided': 0, 'reported': current_task["id"], 'points': 0})
             put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
 
     def get_prev_task(self):
@@ -344,17 +353,16 @@ class MainWindow(QMainWindow):
     def check_answer(self):
         global task_id, current_task
 
-        decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')
+        decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')[2:]
         if current_task["user_login"] != USER["login"]:
             if str(current_task["id"]) not in decided_tasks:
                 if self.lineAnswer.text() == current_task['answer']:
                     self.labelAnswStatus.setText('✓')
                     self.labelAnswStatus.setToolTip('Статус: зачтено')
-                    put(f"http://127.0.0.1:8080/api/users/{USER['login']}", data={'decided': current_task['id'], 'reported': 0, 'points': 0})
-                    put(f"http://127.0.0.1:8080/api/users/{USER['login']}", data={'decided': 1, 'reported': 0, 'points': current_task['points']})
-
+                    put(f"http://127.0.0.1:8080/api/users/{USER['login']}",
+                        data={'decided': current_task['id'], 'reported': 0, 'points': current_task['points']})
                     self.update_profile()
-                    self.update_decidedTasks(len(USER['decided_tasks'].split('%')) - 2, current_task)
+                    self.update_decidedTasks(len(USER['decided_tasks'].split('%')) - 3, current_task)
                 else:
                     self.labelAnswStatus.setText('✕')
                     self.labelAnswStatus.setToolTip('Статус: неправельное решение')
