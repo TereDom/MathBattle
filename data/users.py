@@ -12,7 +12,7 @@ class User(SqlAlchemyBase, UserMixin):
     # name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # surname = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     nickname = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
-    status = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    status = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='Новичок')
     points = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, default=0)
     login = sqlalchemy.Column(sqlalchemy.String, nullable=True, unique=True)
     # avatar = sqlalchemy.Column(sqlalchemy.String, nullable=True, default='/default_avatar.png')
