@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, redirect
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from data import db_session
 
 from data.__all_models import *
@@ -103,6 +103,36 @@ def sign_out():
     return redirect("/")
 
 
+@app.route('/new_task', methods=['GET', 'POST'])
+@login_required
+def new_task():
+    form = NewTaskForm()
+    param = dict()
+    param['form'] = form
+    param['template_name_or_list'] = 'new_task.html'
+    param['title'] = 'Новое обсуждение'
+    param['base_style_way'] = url_for('static', filename='css/style.css')
+    param['style_way'] = url_for('static', filename='css/new_task.css')
+    param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        data = dict()
+        data['title'] = form.title.data
+        data['content'] = form.content.data
+        data['short_description'] = (form.short_description.data
+                                     if form.short_description.data != '' else form.content.data)
+        data['user_id'] = current_user.id
+        task = ForumTask(**data)
+        session.add(task)
+        session.commit()
+        print(task.id)
+        task.str_id = str(task.id).rjust(4, '0')
+        session.commit()
+        # return redirect(f'/task{task.id}')
+        return redirect('/')
+    return render_template(**param)
+
+
 if __name__ == '__main__':
-    # app.register_blueprint(api.blueprint)
+    app.register_blueprint(api.blueprint)
     main()
