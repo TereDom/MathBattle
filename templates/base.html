@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="{{base_style_way}}">
+    <link rel="stylesheet" href="{{style_way}}">
+    <script src="https://kit.fontawesome.com/2508aed22d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="header">
+            <div class="header_body">
+                <a class="header_logo">
+                    <img src="images/logo.jpg">
+                </a>
+                <div class="header_right_bar">
+                    {% if current_user.is_authenticated %}
+                        {{current_user.name}}
+                        <a class="sign_out" href="/sign_out">Выйти</a>
+                    {% else %}
+                        <a class="sign_up" href="/sign_up">Зарегистрироваться</a>
+                        <a class="sign_in" href="/sign_in">Войти</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="container">
+        <div class="grid">
+            <div class="right_column">
+                <div class="search">
+                    <h4>Поиск задачи</h4>
+                    <p>{{ form.search_field(type="text") }}</p>
+                    <p>{{ form.submit(type="submit", class="search_button") }}</p>
+                </div>
+                <div class="new_task">
+                    <a class="button" href="/new_task"><i class="fa fa-plus"></i> Добавить обсуждение</a>
+                </div>
+            </div>
+            <div class="center_column">
+                <div class="content">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+            <div class="left_column">
+                <div class="calculate">
+                    <p id="result">0</p>
+                    <button type="button" class="calculate-button clear" id="clear"><i class="fa fa-backspace"></i></button>
+                    <button type="button" class="calculate-button number" id="one" data-symbol="1">1</button>
+                    <button type="button" class="calculate-button number" id="two" data-symbol="2">2</button>
+                    <button type="button" class="calculate-button number" id="three" data-symbol="3">3</button>
+                    <button type="button" class="calculate-button number" id="four" data-symbol="4">4</button>
+                    <button type="button" class="calculate-button number" id="five" data-symbol="5">5</button>
+                    <button type="button" class="calculate-button number" id="six" data-symbol="6">6</button>
+                    <button type="button" class="calculate-button number" id="seven" data-symbol="7">7</button>
+                    <button type="button" class="calculate-button number" id="eight" data-symbol="8">8</button>
+                    <button type="button" class="calculate-button number" id="nine" data-symbol="9">9</button>
+                    <button type="button" class="calculate-button number" id="zero" data-symbol="0">0</button>
+                    <button type="button" class="calculate-button mark" id="plus" data-symbol="+">+</button>
+                    <button type="button" class="calculate-button mark" id="minus" data-symbol="-">-</button>
+                    <button type="button" class="calculate-button mark" id="slash" data-symbol="/">/</button>
+                    <button type="button" class="calculate-button mark" id="cross" data-symbol="*">*</button>
+                    <button type="button" class="calculate-button equals" id="equals" data-symbol="=">=</button>
+                    <button type="button" class="calculate-button dot" id="dot" data-symbol=".">.</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="container">
+        <div class="footer">
+            <div class="footer_body">
+                <div class="footer_left_bar">
+                    <h2><i class="fa fa-copyright"></i> IT bros</h2>
+                </div>
+                <div class="footer_right_bar">
+                    <a class="qt" href="#"><i class="fa fa-download"></i> Скачать windows приложение</a>
+                    <a class="vk" href="#"><i class="fa fa-vk"></i> Мы в VK</a>
+                    <a class="gh" href="#"><i class="fa fa-github"></i> GitHub</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script type="text/javascript" src="{{calculate_script_way}}"></script>
+</body>
+</html>

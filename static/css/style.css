@@ -194,6 +194,7 @@ main{
 #dot{
     grid-row: 5;
     grid-column: 1;
+    font-weight: 600;
 }
 
 #equals{
@@ -233,6 +234,7 @@ main{
     background-color: #808080;
     padding: 10px;
     border-radius: 15px;
+    margin: 0px 0px 15px 0px;
 }
 
 .calculate{
@@ -242,7 +244,8 @@ main{
     grid-gap: 1px;
 }
 
-.search button,
+.button,
+.search #submit,
 .calculate button {
     border: 2px solid #666666;
     border-radius: 9px;
@@ -250,13 +253,15 @@ main{
     color: #ffffff;
     padding: 5px;
     font-family: sans-serif;
-    font-weight: 600;
-    transition: 0.1s;
+    text-decoration: none;
     cursor: pointer;
 }
 
+.button:hover,
+.search #submit:hover,
 .calculate button:hover {
     background: gray;
+    color: #ff8d00;
 }
 
 .calculate p {
@@ -303,4 +308,29 @@ form #submit{
 .footer_right_bar a:hover,
 form #submit:hover{
     background-color: #ff8d00;
+}
+
+.search h4{
+    color: #ffffff;
+    font-family: sans-serif;
+}
+
+.search input{
+    border: 2px solid #666666;
+    border-radius: 10px;
+    height: 29px;
+    background-color: darkgray;
+}
+
+.search #submit{
+    width: 100%;
+}
+
+.search input,
+.search #submit{
+    margin: 5px 0px 0px 0px;
+    font-family: sans-serif;
+    font-weight: 600;
+    transition: 0.25s;
+    cursor: pointer;
 }

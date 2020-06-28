@@ -17,7 +17,7 @@ login_manager.init_app(app)
 
 
 def main():
-    app.run(host='127.0.0.1', port=8080)
+    app.run(host='127.0.0.1', port=5000)
 
 
 @login_manager.user_loader
@@ -30,7 +30,20 @@ def load_user(user_id):
 @app.route('/index')
 @app.route('/main')
 def index():
-    return 'main'
+    form = SearchForm()
+    param = dict()
+    param['form'] = form
+    param['title'] = 'MathBattle'
+    param['base_style_way'] = url_for('static', filename='css/style.css')
+    param['style_way'] = url_for('static', filename='css/main.css')
+    param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
+    param['template_name_or_list'] = 'main.html'
+    session = db_session.create_session()
+    if form.validate_on_submit():
+        param['tasks'] = session.query(ForumTask).filter(form.search_field.data.lower() in ForumTask.name.lower())
+        return render_template(**param)
+    param['tasks'] = session.query(ForumTask)
+    return render_template(**param)
 
 
 @app.route('/sign_up', methods=['GET', 'POST'])
@@ -48,7 +61,6 @@ def sign_up():
             param['message'] = "Пароли не совпадают"
             return render_template(**param)
         session = db_session.create_session()
-        print(form.login.data)
         if session.query(User).filter(User.login == str(form.login.data)).first():
             param['message'] = "Такой пользователь уже есть"
             return render_template(**param)

@@ -1,0 +1,38 @@
+.task_info .left,
+.task_info .right{
+    display: inline-block;
+    width: 35%;
+}
+
+.task_info .left{
+    width: 64%;
+}
+
+.task_info .right{
+    text-align: end;
+}
+
+.task_info h4,
+.task_info h2{
+    display: inline-block;
+    padding: 10px
+}
+
+.task_info h2{
+    padding: 0px 0px 10px 10px;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    grid-gap: 10px;
+}
+
+.task_title a{
+    color: #000000;
+    text-decoration: none;
+}
+
+.task_id a{
+    color: #ff8d00;
+}
