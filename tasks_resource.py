@@ -15,6 +15,7 @@ parser.add_argument('user_login', required=True)
 
 
 def abort_if_task_not_found(task_id):
+    """Обработка ситуации, при которой в запросе указывается не существующий элемент"""
     session = db_session.create_session()
     task = session.query(Task).filter(Task.id == task_id).first()
     if not task:
@@ -23,6 +24,7 @@ def abort_if_task_not_found(task_id):
 
 class TaskResource(Resource):
     def get(self, task_id):
+        """Функция, обрабатывающая get запрос и возвращающая один объект"""
         session = db_session.create_session()
         if int(task_id):
             abort_if_task_not_found(task_id)
@@ -34,6 +36,7 @@ class TaskResource(Resource):
             return jsonify({'count': count})
 
     def put(self, task_id):
+        """Функция, обрабатывающая put запрос и изменяющая один объект"""
         session = db_session.create_session()
         task = session.query(Task).filter(Task.id == task_id).first()
         task.reports += 1
@@ -42,6 +45,7 @@ class TaskResource(Resource):
         return jsonify({'success': 'OK'})
 
     def delete(self, task_id):
+        """Функция, обрабатывающая delete запрос и удаляющая один объект"""
         session = db_session.create_session()
         task = session.query(Task).filter(Task.id == task_id).first()
         session.delete(task)
@@ -51,6 +55,7 @@ class TaskResource(Resource):
 
 
 class TaskListResource(Resource):
+    """Функция, обрабатывающая get запрос и возвращающая список объектов"""
     def get(self, user_login):
         session = db_session.create_session()
         if user_login != "'":
@@ -62,6 +67,7 @@ class TaskListResource(Resource):
                                    'reports': task.reports} for task in tasks]})
 
     def post(self, user_login):
+        """Функция, обрабатывающая post запрос и добавляющая один объект"""
         print(1)
         args = parser.parse_args()
         session = db_session.create_session()
@@ -77,6 +83,7 @@ class TaskListResource(Resource):
         return jsonify({'success': 'OK'})
 
     def delete(self, user_login):
+        """Функция, обрабатывающая delete запрос и удаляющая список объектов"""
         session = db_session.create_session()
         tasks = session.query(Task).filter(Task.user_login == user_login).all()
         for task in tasks:

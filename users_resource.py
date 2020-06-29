@@ -16,6 +16,7 @@ parser.add_argument('birthday', required=True)
 
 
 def abort_if_user_not_found(user_login):
+    """Обработка ситуации, при которой в запросе указывается не существующий элемент"""
     session = db_session.create_session()
     user = session.query(User).filter(User.login == user_login).first()
     if not user:
@@ -23,6 +24,7 @@ def abort_if_user_not_found(user_login):
 
 
 class UserResource(Resource):
+    """Функция, обрабатывающая put запрос и изменяющая один объект"""
     def put(self, user_login):
         reported = request.form['reported']
         decided = request.form['decided']
@@ -41,6 +43,7 @@ class UserResource(Resource):
         return jsonify({'success': 'OK'})
 
     def delete(self, user_login):
+        """Функция, обрабатывающая delete запрос и удаляющая один объект"""
         session = db_session.create_session()
         user = session.query(User).filter(User.login == user_login).first()
         session.delete(user)
@@ -49,6 +52,7 @@ class UserResource(Resource):
         return jsonify({'success': 'OK'})
 
     def get(self, user_login):
+        """Функция, обрабатывающая get запрос и возвращающая один объект"""
         abort_if_user_not_found(user_login)
         session = db_session.create_session()
         user = session.query(User).filter(User.login == user_login).first()
@@ -59,6 +63,7 @@ class UserResource(Resource):
 
 class UserListResource(Resource):
     def post(self):
+        """Функция, обрабатывающая post запрос и добавляющая один объект"""
         args = parser.parse_args()
         session = db_session.create_session()
         user = User(
