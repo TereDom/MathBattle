@@ -109,30 +109,6 @@ main{
     transition: 0.25s;
     cursor: pointer;
 }
-.search h4{
-    color: #ffffff;
-    font-family: sans-serif;
-}
-
-.search input{
-    border: 2px solid #666666;
-    border-radius: 10px;
-    height: 29px;
-    background-color: darkgray;
-}
-
-.search button{
-    width: 100%;
-}
-
-.search input,
-.search button{
-    margin: 5px 0px 0px 0px;
-    font-family: sans-serif;
-    font-weight: 600;
-    transition: 0.25s;
-    cursor: pointer;
-}
 
 /*Кнопки калькулятора*/
 
@@ -229,6 +205,7 @@ main{
 
 /**/
 
+.new_task,
 .search,
 .calculate{
     background-color: #808080;
@@ -244,7 +221,7 @@ main{
     grid-gap: 1px;
 }
 
-.button,
+.new_task .button,
 .search #submit,
 .calculate button {
     border: 2px solid #666666;
@@ -257,7 +234,7 @@ main{
     cursor: pointer;
 }
 
-.button:hover,
+.new_task .button:hover,
 .search #submit:hover,
 .calculate button:hover {
     background: gray;
@@ -310,11 +287,13 @@ form #submit:hover{
     background-color: #ff8d00;
 }
 
+.new_task h4,
 .search h4{
     color: #ffffff;
     font-family: sans-serif;
 }
 
+.new_task .button,
 .search input{
     border: 2px solid #666666;
     border-radius: 10px;
@@ -322,10 +301,12 @@ form #submit:hover{
     background-color: darkgray;
 }
 
+.new_task .button,
 .search #submit{
     width: 100%;
 }
 
+.new_task .button,
 .search input,
 .search #submit{
     margin: 5px 0px 0px 0px;
@@ -333,4 +314,14 @@ form #submit:hover{
     font-weight: 600;
     transition: 0.25s;
     cursor: pointer;
+}
+
+.new_task .button{
+    display: block;
+    text-align: center;
+}
+
+form{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
 }

@@ -1,91 +1,36 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{base_style_way}}">
-    <link rel="stylesheet" href="{{style_way}}">
-    <script src="https://kit.fontawesome.com/2508aed22d.js" crossorigin="anonymous"></script>
-    <title>{{title}}</title>
-</head>
-<body>
-<header>
-    <div class="container">
-        <div class="header">
-            <div class="header_body">
-                <a class="header_logo">
-                    <img src="images/logo.jpg">
-                </a>
-                <div class="header_right_bar">
-                    {% if current_user.is_authenticated %}
-                        {{current_user.name}}
-                        <a class="sign_out" href="/sign_out">Выйти</a>
-                    {% else %}
-                        <a class="sign_up" href="/sign_up">Зарегистрироваться</a>
-                        <a class="sign_in" href="/sign_in">Войти</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Добавление обсуждения</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control", type="title") }}<br>
+        {% for error in form.title.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
     </div>
-</header>
-<main>
-    <div class="container">
-        <div class="sign">
-            <h1>Добавление обсуждения</h1>
-            <form action="" method="post">
-                {{ form.hidden_tag() }}
-                <p>
-                    {{ form.title.label }}<br>
-                    {{ form.title(class="form-control", type="title") }}<br>
-                    {% for error in form.title.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.short_description.label }}<br>
-                    {{ form.short_description(class="form-control", type="short_description") }}<br>
-                    {% for error in form.short_description.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                </p>
-                <p>
-                    {{ form.content.label }}<br>
-                    {{ form.content(class="form-control", type="content") }}<br>
-                    {% for error in form.content.errors %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
-                        </div>
-                    {% endfor %}
-                </p>
-                <p>{{ form.submit(type="submit") }} <a href="/" class="button" style="color: #ff0000;">Отмена</a> </p>
-            </form>
-        </div>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.short_description.label }}<br>
+        {{ form.short_description(class="form-control", type="short_description") }}<br>
+        {% for error in form.short_description.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
     </div>
-</main>
-<footer>
-    <div class="container">
-        <div class="footer">
-            <div class="footer_body">
-                <div class="footer_left_bar">
-                    <h2><i class="fa fa-copyright"></i> IT bros</h2>
-                </div>
-                <div class="footer_right_bar">
-                    <a class="qt" href="#"><i class="fa fa-download"></i> Скачать windows приложение</a>
-                    <a class="vk" href="#"><i class="fa fa-vk"></i> Мы в VK</a>
-                    <a class="gh" href="#"><i class="fa fa-github"></i> GitHub</a>
-                </div>
-            </div>
-        </div>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(class="form-control", type="content") }}<br>
+        {% for error in form.content.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
     </div>
-</footer>
-</body>
-</html>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit") }} <a href="/" class="button" style="color: #ff0000;">Отмена</a> </p>
+</form>
+{% endblock %}

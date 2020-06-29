@@ -22,12 +22,6 @@
     padding: 0px 0px 10px 10px;
 }
 
-.grid{
-    display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
-    grid-gap: 10px;
-}
-
 .task_title a{
     color: #000000;
     text-decoration: none;

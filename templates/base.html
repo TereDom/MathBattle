@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>{{title}}</title>
     <meta name="viewport" content="width=device-width">
+    {% if bootstrap %}
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    {% endif %}
     <link rel="stylesheet" href="{{base_style_way}}">
     <link rel="stylesheet" href="{{style_way}}">
     <script src="https://kit.fontawesome.com/2508aed22d.js" crossorigin="anonymous"></script>
@@ -13,7 +19,7 @@
     <div class="container">
         <div class="header">
             <div class="header_body">
-                <a class="header_logo">
+                <a class="header_logo" href="/">
                     <img src="images/logo.jpg">
                 </a>
                 <div class="header_right_bar">
@@ -33,14 +39,22 @@
     <div class="container">
         <div class="grid">
             <div class="right_column">
+                {% if search %}
                 <div class="search">
-                    <h4>Поиск задачи</h4>
-                    <p>{{ form.search_field(type="text") }}</p>
-                    <p>{{ form.submit(type="submit", class="search_button") }}</p>
+                    <form action="" method="post">
+                        {{ form.hidden_tag() }}
+                        <h4>Поиск задачи</h4>
+                        <p>{{ form.search_field(type="text") }}</p>
+                        <p>{{ form.submit(type="submit", class="search_button") }}</p>
+                    </form>
                 </div>
+                {% endif %}
+                {% if new_task %}
                 <div class="new_task">
-                    <a class="button" href="/new_task"><i class="fa fa-plus"></i> Добавить обсуждение</a>
+                    <h4>Добавить обсуждение</h4>
+                    <h3><a class="button" href="/new_task"><i class="fa fa-plus"></i></a></h3>
                 </div>
+                {% endif %}
             </div>
             <div class="center_column">
                 <div class="content">
@@ -48,6 +62,7 @@
                 </div>
             </div>
             <div class="left_column">
+                {% if calculate %}
                 <div class="calculate">
                     <p id="result">0</p>
                     <button type="button" class="calculate-button clear" id="clear"><i class="fa fa-backspace"></i></button>
@@ -68,6 +83,7 @@
                     <button type="button" class="calculate-button equals" id="equals" data-symbol="=">=</button>
                     <button type="button" class="calculate-button dot" id="dot" data-symbol=".">.</button>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

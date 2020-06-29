@@ -26,9 +26,9 @@ def load_user(user_id):
     return session.query(User).get(user_id)
 
 
-@app.route('/')
-@app.route('/index')
-@app.route('/main')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/main', methods=['GET', 'POST'])
 def index():
     form = SearchForm()
     param = dict()
@@ -38,9 +38,20 @@ def index():
     param['style_way'] = url_for('static', filename='css/main.css')
     param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
     param['template_name_or_list'] = 'main.html'
+    param['search'] = True
+    param['new_task'] = True
+    param['calculate'] = True
+    param['bootstrap'] = False
     session = db_session.create_session()
     if form.validate_on_submit():
-        param['tasks'] = session.query(ForumTask).filter(form.search_field.data.lower() in ForumTask.name.lower())
+        tasks = session.query(ForumTask).all()
+        param['tasks'] = list()
+        for task in tasks:
+            task.answers = len(list(session.query(ForumAnswer).filter(ForumAnswer.task_id == task.id)))
+            session.commit()
+            if form.search_field.data.lower() in task.title.lower():
+                param['tasks'] .append(task)
+        print(param['tasks'])
         return render_template(**param)
     param['tasks'] = session.query(ForumTask)
     return render_template(**param)
@@ -56,6 +67,10 @@ def sign_up():
     param['style_way'] = url_for('static', filename='css/sign_up.css')
     param['template_name_or_list'] = 'sign_up.html'
     param['message'] = ''
+    param['search'] = False
+    param['new_task'] = False
+    param['calculate'] = False
+    param['bootstrap'] = True
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
             param['message'] = "Пароли не совпадают"
@@ -85,6 +100,10 @@ def sign_in():
     param['base_style_way'] = url_for('static', filename='css/style.css')
     param['style_way'] = url_for('static', filename='css/sign_in.css')
     param['message'] = ''
+    param['search'] = False
+    param['new_task'] = False
+    param['calculate'] = False
+    param['bootstrap'] = True
     if form.validate_on_submit():
         session = db_session.create_session()
         user = session.query(User).filter(User.login == form.login.data).first()
@@ -114,6 +133,10 @@ def new_task():
     param['base_style_way'] = url_for('static', filename='css/style.css')
     param['style_way'] = url_for('static', filename='css/new_task.css')
     param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
+    param['search'] = False
+    param['new_task'] = False
+    param['calculate'] = True
+    param['bootstrap'] = True
     if form.validate_on_submit():
         session = db_session.create_session()
         data = dict()
@@ -125,11 +148,42 @@ def new_task():
         task = ForumTask(**data)
         session.add(task)
         session.commit()
-        print(task.id)
         task.str_id = str(task.id).rjust(4, '0')
         session.commit()
         # return redirect(f'/task{task.id}')
         return redirect('/')
+    return render_template(**param)
+
+
+@app.route('/task/<task_id>', methods=['GET', 'POST'])
+def task(task_id):
+    form = NewAnswerForm()
+    session = db_session.create_session()
+    task = session.query(ForumTask).filter(ForumTask.id == task_id).first()
+    param = dict()
+    param['form'] = form
+    param['title'] = task.title
+    param['base_style_way'] = url_for('static', filename='css/style.css')
+    param['style_way'] = url_for('static', filename='css/task.css')
+    param['template_name_or_list'] = 'task.html'
+    param['search'] = False
+    param['new_task'] = True
+    param['calculate'] = True
+    param['bootstrap'] = False
+    param['task'] = task
+    param['answers'] = session.query(ForumAnswer).filter(ForumAnswer.task_id == task_id)
+    task.answers = len(list(param['answers']))
+    task.views += 1
+    session.commit()
+    if form.validate_on_submit():
+        data = dict()
+        data['user_id'] = current_user.id
+        data['content'] = form.answer_field.data
+        data['task_id'] = task_id
+        answer = ForumAnswer(**data)
+        session.add(answer)
+        session.commit()
+        return redirect(f'/task/{task_id}#{answer.id}')
     return render_template(**param)
 
 
