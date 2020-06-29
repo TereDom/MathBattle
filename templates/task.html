@@ -35,6 +35,7 @@
         </p>
     </div>
     {% endfor %}
+    {% if current_user.is_authenticated %}
     <hr size="5" color="black" style="border-radius: 50%">
     <div class="answer">
         <form action="" method="post">
@@ -45,5 +46,6 @@
             </p>
         </form>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

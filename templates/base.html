@@ -49,7 +49,7 @@
                     </form>
                 </div>
                 {% endif %}
-                {% if new_task %}
+                {% if new_task and current_user.is_authenticated %}
                 <div class="new_task">
                     <h4>Добавить обсуждение</h4>
                     <h3><a class="button" href="/new_task"><i class="fa fa-plus"></i></a></h3>

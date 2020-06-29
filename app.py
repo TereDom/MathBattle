@@ -165,6 +165,7 @@ def task(task_id):
     param['title'] = task.title
     param['base_style_way'] = url_for('static', filename='css/style.css')
     param['style_way'] = url_for('static', filename='css/task.css')
+    param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
     param['template_name_or_list'] = 'task.html'
     param['search'] = False
     param['new_task'] = True
