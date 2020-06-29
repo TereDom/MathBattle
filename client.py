@@ -363,7 +363,7 @@ class MainWindow(QMainWindow):
         global task_id, current_task
 
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')[2:]
-        if current_task["user_login"] != USER["login"]:
+        if str(current_task["user_login"]) != USER["login"]:
             if str(current_task["id"]) not in decided_tasks:
                 if self.lineAnswer.text() == current_task['answer']:
                     self.labelAnswStatus.setText('✓')
@@ -394,6 +394,7 @@ class MainWindow(QMainWindow):
         self.labelTitle.setText(current_task['name'])
         self.labelID.setText(f'ID: {current_task["id"]}')
         self.ScoreLabel.setText(f'{current_task["points"]} баллов')
+        self.warningLabel.setText('')
         self.labelAuthor.setText('Автор: ' + get(f'http://127.0.0.1:8080/api/users/{current_task["user_login"]}').json()["nickname"])
         if str(current_task["id"]) in str(USER['decided_tasks']):
             self.lineAnswer.setText(current_task['answer'])
@@ -422,15 +423,14 @@ class MainWindow(QMainWindow):
             self.new_settings[txt[1]] = Button.text() + '&' + txt[2]
 
     def add_task(self):
-        print(USER)
         dct = {'name': self.title_lineEdit.text(), 'user_login': USER['login'],
-               'points': task_diff[self.difficult_lvl_comboBox.currentText()],
+               'points': int(task_diff[self.difficult_lvl_comboBox.currentText()]),
                'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
         try:
             if not (self.title_lineEdit.text() and
                     self.task_text_TextEdit.toPlainText() and self.answer_lineEdit.text()):
                 raise NameError()
-            float(dct['answer'])
+            dct['answer'] = float(dct['answer'])
         except ValueError:
             self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
             self.error_label.setText('Некорректный ответ (ответ должен быть представлен числом)')

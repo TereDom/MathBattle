@@ -11,7 +11,7 @@ parser.add_argument('name', required=True)
 parser.add_argument('content', required=True)
 parser.add_argument('answer', required=True)
 parser.add_argument('points', required=True, type=int)
-parser.add_argument('user_id', required=True, type=int)
+parser.add_argument('user_login', required=True)
 
 
 def abort_if_task_not_found(task_id):
