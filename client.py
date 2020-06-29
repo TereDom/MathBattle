@@ -170,9 +170,6 @@ class MainWindow(QMainWindow):
             self.get_next_task()
 
         """Заполняется таблица решённых задач"""
-        self.decidedTasks.setColumnCount(3)
-        self.decidedTasks.setHorizontalHeaderLabels(['ID', 'Название задачи', 'Получено баллов'])
-        self.decidedTasks.horizontalHeader().setDefaultSectionSize(146)
         n_tasks = USER['decided_tasks'].split('%')[2:]
         i = 0
         for j in n_tasks:
@@ -379,9 +376,17 @@ class MainWindow(QMainWindow):
 
     def report(self):
         global USER, current_task
-        if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['reports'].split('%'):
-            put(f'http://127.0.0.1:8080/api/users/{USER["login"]}', data={'decided': 0, 'reported': current_task["id"], 'points': 0})
-            put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
+        valid = QMessageBox.question(self, 'Предупреждение',
+                                     "Вы действительно хотите пожаловаться на задачу?",
+                                     QMessageBox.Yes, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['reports'].split('%'):
+                put(f'http://127.0.0.1:8080/api/users/{USER["login"]}', data={'decided': 0, 'reported': current_task["id"], 'points': 0})
+                put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
+            else:
+                valid = QMessageBox.warning(self, 'Предупреждение',
+                                             "Вы уже отправили жалобу на задачу!",
+                                             QMessageBox.Cancel)
 
     def check_answer(self):
         """Функция проверяет ответ пользователя с правильным ответом. Если ответ правильный,
@@ -392,16 +397,21 @@ class MainWindow(QMainWindow):
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')[2:]
         if str(current_task["user_login"]) != USER["login"]:
             if str(current_task["id"]) not in decided_tasks:
-                if self.lineAnswer.text() == current_task['answer']:
-                    self.labelAnswStatus.setText('✓')
-                    self.labelAnswStatus.setToolTip('Статус: зачтено')
-                    put(f"http://127.0.0.1:8080/api/users/{USER['login']}",
-                        data={'decided': current_task['id'], 'reported': 0, 'points': current_task['points']})
-                    self.update_profile()
-                    self.update_decidedTasks(len(USER['decided_tasks'].split('%')) - 3, current_task)
-                else:
-                    self.labelAnswStatus.setText('✕')
-                    self.labelAnswStatus.setToolTip('Статус: неправельное решение')
+                try:
+                    print(float(self.lineAnswer.text()), current_task['answer'])
+                    if float(self.lineAnswer.text()) == float(current_task['answer']):
+                        self.labelAnswStatus.setText('✓')
+                        self.labelAnswStatus.setToolTip('Статус: зачтено')
+                        put(f"http://127.0.0.1:8080/api/users/{USER['login']}",
+                            data={'decided': current_task['id'], 'reported': 0, 'points': current_task['points']})
+                        self.update_profile()
+                        self.update_decidedTasks(len(USER['decided_tasks'].split('%')) - 3, current_task)
+                        self.warningLabel.setText("")
+                    else:
+                        self.labelAnswStatus.setText('✕')
+                        self.labelAnswStatus.setToolTip('Статус: неправельное решение')
+                except:
+                    self.warningLabel.setText("Ответ должен быть представлен числом")
             else:
                 self.warningLabel.setText("Вы уже решили эту задачу")
         else:
