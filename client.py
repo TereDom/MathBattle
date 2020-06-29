@@ -1,11 +1,7 @@
-from PyQt5.uic.properties import QtWidgets, QtGui
-
-USER = ''
 import sys
 from PyQt5 import uic
-from PyQt5.QtCore import Qt, QPoint, QCoreApplication
-from PyQt5.QtGui import QImage, QPainter, QPen
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QTableWidgetItem, QMessageBox
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox
 from requests import get, post, put
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -23,14 +19,8 @@ def check_password(self, password):
     return check_password_hash(self.hashed_password, password)
 
 
+USER = ''
 task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
-
-
-def set_settings(window):
-    """Функция подгоняет клиент под текущие настройки"""
-    window.setStyleSheet("background-color: rgb(90, 90, 90);" if window.settings[0] == 'Тёмная&2'
-                         else "background-color: rgb(230, 230, 230);")
-    window.update()
 
 
 class RegisterWindow(QWidget):
@@ -43,6 +33,9 @@ class RegisterWindow(QWidget):
         self.return_home_Button.clicked.connect(self.go_back)
 
     def reg(self):
+        """Функция регистрации. Она проверят чтоб все строчки в форме были заполнены,
+           чтоб совпадали пароли и чтоб был уникальный логин. Если все условия соблюдены,
+           то создаёт нового пользователя, иначе звполняет error_label."""
         global USER
         if self.create_Password_lineEdit.text() == self.prove_Password_lineEdit.text():
             if self.create_Nickname_lineEdit.text() and self.create_Email_lineEdit.text() and \
@@ -91,7 +84,11 @@ class LoginWindow(QWidget):
         self.remember = False
 
     def login(self):
-        """Алогоритм входа в программу"""
+        """Функция входа в программу. Она получает пользователя из get-запроса и проверяет
+           хешированный пароль с тем, который ввёл пользователь. Если пользователь с таким
+           логином существует и пароль правильный, то входим в развилку. Если пользователь
+           выбрал 'Запомнить меня', то в settings.txt записывается его логин.
+           Далее открывается нужная форма в связи со статусом пользователя."""
         global USER
         try:
             USER = get(f'http://127.0.0.1:8080/api/users/{self.login_lineEdit.text()}').json()
@@ -99,7 +96,7 @@ class LoginWindow(QWidget):
                 if self.remember:
                     txt = open('data/settings.txt', 'r').read().split('\n')
                     txt.remove("'")
-                    txt.insert(1, USER['login'])
+                    txt.insert(0, USER['login'])
 
                     self.settings = open('data/settings.txt', 'w')
                     self.settings.write('\n'.join(txt))
@@ -127,6 +124,8 @@ class LoginWindow(QWidget):
 class PreviewWindow(QWidget):
     """Форма приветственного окна"""
     def __init__(self):
+        """Если логин указан в settings.txt, то сразу по нажатию на
+           кнопку 'Войти' откроет либо MainWindow(), либо DeveloperClient()"""
         global USER
         super().__init__()
         uic.loadUi('data/ui/PreviewRegisterWindow.ui', self)
@@ -134,10 +133,8 @@ class PreviewWindow(QWidget):
         self.LoginButton.clicked.connect(self.open_login_form)
 
         txt = open('data/settings.txt', 'r').read().split('\n')
-        # USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
-        # self.open_form = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
-        if str(txt[-2]) != "'":
-            USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
+        if str(txt[0]) != "'":
+            USER = get(f'http://127.0.0.1:8080/api/users/{txt[0]}').json()
             self.open_form = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
         else:
             self.open_form = LoginWindow()
@@ -155,16 +152,24 @@ class PreviewWindow(QWidget):
 class MainWindow(QMainWindow):
     """Форма главного окна"""
     def __init__(self):
+        """current_task - id текушей задачи; task_id - id будущей задачи;
+           Если задача с tsk_id существует, то обновляется current_task"""
         global current_task, task_id
         super().__init__()
 
         self.settings = open('data/settings.txt', 'r').read().split('\n')
         uic.loadUi('data/ui/client.ui', self)
-        current_task = get(f'http://127.0.0.1:8080/api/task/{self.settings[-1]}').json()
-        task_id = current_task['id']
-        set_settings(self)
-        self.post_task()
+        task_id = int(self.settings[-1])
+        current_task = get(f'http://127.0.0.1:8080/api/task/{self.settings[-1]}')
 
+        if current_task:
+            current_task = current_task.json()
+            self.post_task()
+        else:
+            current_task = current_task.json()
+            self.get_next_task()
+
+        """Заполняется таблица решённых задач"""
         self.decidedTasks.setColumnCount(3)
         self.decidedTasks.setHorizontalHeaderLabels(['ID', 'Название задачи', 'Получено баллов'])
         self.decidedTasks.horizontalHeader().setDefaultSectionSize(146)
@@ -178,6 +183,7 @@ class MainWindow(QMainWindow):
                 self.update_decidedTasks(i, task)
                 i += 1
 
+        """Обработка кнопок"""
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
         self.ButtonSendAnswer.clicked.connect(self.check_answer)
@@ -210,34 +216,107 @@ class MainWindow(QMainWindow):
         self.labelCalcNums.setText(self.nice_view(self.number_board))
         self.update_profile()
 
-        self.ButtonAccept.clicked.connect(self.accept)
-
-        self.Button_1_1.toggled.connect(self.onClicked)
-        self.Button_1_2.toggled.connect(self.onClicked)
-        # self.Button_2_1.toggled.connect(self.onClicked)
-
-        self.new_settings = {}
-
         self.ButtonExit.clicked.connect(self.exit_from_account)
 
         self.add_task_pushButton.clicked.connect(self.add_task)
 
-        for i in range(1, 2):
-            eval(f'self.Button_{i}_{self.settings[i - 1].split("&")[1]}.setChecked(True)')
-        # self.Button_2_1.setChecked(self.settings[2] == 'Отображать решённые задачи')
-
-    # Калькулятор
+    """-----Функции калькулятора и боковой панели-----"""
 
     def num_operation(self, button=''):
-        """Функция записывает введённые цифры в number_board"""
+        """Функция записывает введённые цифры в number_board.
+           Число добавляетя в строку, потом преобразуется в нужный формат."""
         button = self.sender().text() if not button else button
         self.number_board += button
         self.number_board = str(int(self.number_board)) \
             if '.' not in self.number_board else str(float(self.number_board))
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
-    def update_decidedTasks(self, last_section, current_task):
+    def arithmetic_operation(self, button=''):
+        """Функция обрабатывает арифметические знаки и точку.
+           Если точка, то программа пробует преобразовать полученную строку в число.
+           Если будет 2 точки, то вылетит ошибка и вторая точка не поставится.
+           Если вводятся другие знаки, то соответствующий знак ставится в expr_board, либо
+           меняет последний знак. Старый number_board становится частью expr_board
+           и зануляется."""
+        button = self.sender().text() if not button else button
+        if button == '.':
+            try:
+                eval(self.number_board + '.')
+                self.number_board += button
+                self.labelCalcNums.setText(self.nice_view(self.number_board))
+            except:
+                pass
+        else:
+            self.expr_board += self.number_board
+            if self.expr_board:
+                if self.expr_board[-1] in ['+', '-', '*', '/']:
+                    self.expr_board = self.expr_board[:-1] + button
+                else:
+                    self.expr_board += button
+            else:
+                self.expr_board += '0' + button
 
+            self.number_board = ''
+            self.labelExprCalc.setText(self.expr_board)
+            self.labelCalcNums.setText(self.nice_view(self.number_board))
+
+    def special_operation(self, button=''):
+        """Функция обрабатывает знаки типа 'удалить символ' и 'посчитать'.
+           Если нажата кнопка 'удалить символ', то удаляется последняя цифра числа.
+           Если нажата кнопка 'посчитать', то возвращается результат expr_board (если
+           его можно посчитать, иначе обрабатывается ошибка)"""
+        button = self.sender().text() if not button else button
+        if button == '⌫':
+            self.number_board = self.number_board[:-1] if len(self.number_board) != 0 else ''
+            self.labelCalcNums.setText(self.nice_view(self.number_board))
+        if button == '=':
+            try:
+                self.expr_board += self.number_board
+                self.number_board = str(eval(self.expr_board))
+                self.labelCalcNums.setText(self.number_board)
+                self.labelExprCalc.setText(self.expr_board + '=')
+                self.expr_board = ''
+            except:
+                self.labelCalcNums.setText('Error')
+                self.number_board, self.expr_board = '', ''
+
+    def nice_view(self, string):
+        return '0' if string == '' else string
+
+    def search(self):
+        """Функция ищет задачу по id, который ввёл пользователь."""
+        global current_task
+        text = self.lineSearch.text()
+        try:
+            current_task = get(f'http://127.0.0.1:8080/api/task/{int(text)}').json()
+            self.post_task()
+        except:
+            pass
+
+    def exit_from_account(self):
+        """Функция обрабатывает кнопку выхода из аккаунта.
+           В settings.txt затерается догин пользователя, окно закрывается
+           и открывается PreviewWindow()"""
+        valid = QMessageBox.question(self, 'Предупреждение',
+                                     "Вы действительно хотите выйти из аккаунта?",
+                                     QMessageBox.Yes, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            if self.settings[-2] == USER['login']:
+                self.settings.clear()
+                self.settings.append("'")
+                self.settings.append(str(current_task['id']))
+
+                self.write_settings = open("data/settings.txt", "w")
+                self.write_settings.write('\n'.join(self.settings))
+                self.write_settings.close()
+
+            self.preview = PreviewWindow()
+            self.preview.show()
+            self.hide()
+
+    """-----Работа с сервером-----"""
+
+    def update_decidedTasks(self, last_section, current_task):
         self.decidedTasks.setRowCount(last_section + 1)
         self.decidedTasks.setItem(last_section, 0, QTableWidgetItem(str(current_task['id'])))
         self.decidedTasks.setItem(last_section, 1, QTableWidgetItem(current_task['name']))
@@ -263,63 +342,9 @@ class MainWindow(QMainWindow):
             self.AddTaskPage.setEnabled(True)
             self.permission_label.clear()
 
-    def arithmetic_operation(self, button=''):
-        """Функция обрабатывает арифметические знаки и точку"""
-        button = self.sender().text() if not button else button
-        if button == '.':
-            try:
-                eval(self.number_board + '.')
-                self.number_board += button
-                self.labelCalcNums.setText(self.nice_view(self.number_board))
-            except:
-                pass
-        else:
-            self.expr_board += self.number_board
-            if self.expr_board:
-                if self.expr_board[-1] in ['+', '-', '*', '/']:
-                    self.expr_board = self.expr_board[:-1] + button
-                else:
-                    self.expr_board += button
-            else:
-                self.expr_board += '0' + button
-
-            self.number_board = ''
-            self.labelExprCalc.setText(self.expr_board)
-            self.labelCalcNums.setText(self.nice_view(self.number_board))
-
-    def special_operation(self, button=''):
-        """Функция обрабатывает """
-        button = self.sender().text() if not button else button
-        if button == '⌫':
-            self.number_board = self.number_board[:-1] if len(self.number_board) != 0 else ''
-            self.labelCalcNums.setText(self.nice_view(self.number_board))
-        if button == '=':
-            try:
-                self.expr_board += self.number_board
-                self.number_board = str(eval(self.expr_board))
-                self.labelCalcNums.setText(self.number_board)
-                self.labelExprCalc.setText(self.expr_board + '=')
-                self.expr_board = ''
-            except:
-                self.labelCalcNums.setText('Error')
-                self.number_board, self.expr_board = '', ''
-
-    def nice_view(self, string):
-        return '0' if string == '' else string
-
-    def search(self):
-        """Функция ищет задачу по id, который ввёл пользователь"""
-        global current_task
-        text = self.lineSearch.text()
-        try:
-            current_task = get(f'http://127.0.0.1:8080/api/task/{int(text)}').json()
-            self.post_task()
-        except:
-            pass
-
-    # Работа с сервером
-
     def get_next_task(self):
+        """Фунуция получает следующую по id задачу. Если id существует,
+           то обновляется current_task, иначе происходит рекурсия."""
         global current_task, task_id
         max_id = get("http://127.0.0.1:8080/api/task/0").json()['count']
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')
@@ -334,13 +359,9 @@ class MainWindow(QMainWindow):
             else:
                 self.get_next_task()
 
-    def report(self):
-        global USER, current_task
-        if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['reports'].split('%'):
-            put(f'http://127.0.0.1:8080/api/users/{USER["login"]}', data={'decided': 0, 'reported': current_task["id"], 'points': 0})
-            put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
-
     def get_prev_task(self):
+        """Фунуция получает предыдущую по id задачу. Если id существует,
+           то обновляется current_task, иначе происходит рекурсия."""
         global current_task, task_id
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split()
         max_id = get('http://127.0.0.1:8080/api/task/0').json()['count']
@@ -356,10 +377,16 @@ class MainWindow(QMainWindow):
             else:
                 self.get_prev_task()
 
-    def run(self):
-        self.label.setText('OK')
+    def report(self):
+        global USER, current_task
+        if str(current_task['id']) not in get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['reports'].split('%'):
+            put(f'http://127.0.0.1:8080/api/users/{USER["login"]}', data={'decided': 0, 'reported': current_task["id"], 'points': 0})
+            put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
 
     def check_answer(self):
+        """Функция проверяет ответ пользователя с правильным ответом. Если ответ правильный,
+           то запольняютя вспомогательные объекты, изменяется список решённых пользователем задач и
+           начисляются баллы."""
         global task_id, current_task
 
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')[2:]
@@ -381,10 +408,12 @@ class MainWindow(QMainWindow):
             self.warningLabel.setText("Вы не можете решить свою же задачу")
 
     def post_task(self):
+        """Задача отображается в форме."""
         global current_task
+        current_task = current_task
         txt = open('data/settings.txt', 'r').read().split('\n')
         txt.remove(txt[-1])
-        txt.insert(3, str(current_task["id"]))
+        txt.append(str(current_task["id"]))
 
         new_settings = open('data/settings.txt', 'w')
         new_settings.write('\n'.join(txt))
@@ -404,25 +433,9 @@ class MainWindow(QMainWindow):
             self.labelAnswStatus.setText('')
             self.labelAnswStatus.setToolTip('Статус')
 
-    # Настройки
-
-    def accept(self):
-        for elem in self.new_settings.keys():
-            self.settings[int(elem) - 1] = list(self.new_settings.values())[0]
-
-        self.write_settings = open("data/settings.txt", "w")
-        self.write_settings.write('\n'.join(self.settings))
-        self.write_settings.close()
-        set_settings(self)
-
-    def onClicked(self):
-        Button = self.sender()
-        if Button.isChecked():
-            txt = Button.objectName().split('_')
-            self.new_settings[txt[1]] = Button.text() + '&' + txt[2]
-
     def add_task(self):
-        print(USER)
+        """Если у пользователя уже наборалось 150 баллов, то он может добавлять задачи.
+           Если дан числовой ответ и все строки заполненны, то задача добавляется в базу данных."""
         dct = {'name': self.title_lineEdit.text(), 'user_login': USER['login'],
                'points': task_diff[self.difficult_lvl_comboBox.currentText()],
                'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
@@ -432,11 +445,11 @@ class MainWindow(QMainWindow):
                 raise NameError()
             float(dct['answer'])
         except ValueError:
-            self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
+            self.error_label.setStyleSheet('color: rgb(255, 154, 0);')
             self.error_label.setText('Некорректный ответ (ответ должен быть представлен числом)')
             return
         except NameError:
-            self.error_label.setStyleSheet('color: rgb(200, 0, 0);')
+            self.error_label.setStyleSheet('color: rgb(255, 154, 0);')
             self.error_label.setText('Все поля должны быть заполнены')
             return
 
@@ -459,29 +472,8 @@ class MainWindow(QMainWindow):
         if event.key() == Qt.Key_Backspace:
             self.special_operation('⌫')
 
-    def exit_from_account(self):
-        valid = QMessageBox.question(self, 'Предупреждение',
-                                     "Вы действительно хотите выйти из аккаунта?",
-                                     QMessageBox.Yes, QMessageBox.No)
-        if valid == QMessageBox.Yes:
-            if self.settings[-2] == USER['login']:
-                self.settings.remove(USER['login'])
-                self.settings.remove(self.settings[-1])
-                self.settings.insert(2, "'")
-                self.settings.insert(3, str(current_task['id']))
-                self.write_settings = open("data/settings.txt", "w")
-                self.write_settings.write('\n'.join(self.settings))
-                self.write_settings.close()
-
-            self.preview = PreviewWindow()
-            self.preview.show()
-            self.hide()
-
 
 app = QApplication(sys.argv)
-# txt = open('data/settings.txt', 'r').read().split('\n')
-# USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
-# ex = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
 ex = PreviewWindow()
 ex.show()
 sys.exit(app.exec_())
