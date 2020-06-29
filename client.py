@@ -1,13 +1,17 @@
+from PyQt5.uic.properties import QtWidgets, QtGui
+
+USER = ''
 import sys
 from PyQt5 import uic
 from PyQt5.QtCore import Qt, QPoint, QCoreApplication
 from PyQt5.QtGui import QImage, QPainter, QPen
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QTableWidgetItem, QMessageBox
 from requests import get, post, put
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data.__all_models import *
 from data import db_session
+from developer_client import DeveloperClient
 
 
 def set_password(password):
@@ -19,7 +23,6 @@ def check_password(self, password):
     return check_password_hash(self.hashed_password, password)
 
 
-USER = ''
 task_diff = {'A': 10, 'B': 15, 'C': 20, 'D': 25, 'E': 30, 'F': 35}
 
 
@@ -45,17 +48,20 @@ class RegisterWindow(QWidget):
             if self.create_Nickname_lineEdit.text() and self.create_Email_lineEdit.text() and \
                     self.create_Password_lineEdit.text():
                 if self.create_Email_lineEdit.text() != "'":
-                    user = dict()
-                    user['nickname'] = self.create_Nickname_lineEdit.text()
-                    user['login'] = self.create_Email_lineEdit.text()
-                    user['hashed_password'] = set_password(self.create_Password_lineEdit.text())
-                    user['birthday'] = str(self.dateEdit.text())
-                    user['status'] = 'student'
-                    post('http://127.0.0.1:8080/api/user', json=user)
-                    USER = get(f'http://127.0.0.1:8080/api/users/{self.create_Email_lineEdit.text()}').json()
-                    self.open_form = MainWindow()
-                    self.open_form.show()
-                    self.hide()
+                    if not get(f'http://127.0.0.1:8080//api/users/{self.create_Email_lineEdit.text()}'):
+                        user = dict()
+                        user['nickname'] = self.create_Nickname_lineEdit.text()
+                        user['login'] = self.create_Email_lineEdit.text()
+                        user['hashed_password'] = set_password(self.create_Password_lineEdit.text())
+                        user['birthday'] = str(self.dateEdit.text())
+                        user['status'] = 'student'
+                        post('http://127.0.0.1:8080/api/user', json=user)
+                        USER = get(f'http://127.0.0.1:8080/api/users/{self.create_Email_lineEdit.text()}').json()
+                        self.open_form = MainWindow()
+                        self.open_form.show()
+                        self.hide()
+                    else:
+                        self.error_label.setText('Данный логин уже занят')
                 else:
                     self.error_label.setText('Данные некорректны')
 
@@ -99,7 +105,7 @@ class LoginWindow(QWidget):
                     self.settings.write('\n'.join(txt))
                     self.settings.close()
 
-                self.main_form = MainWindow()
+                self.main_form = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
                 self.main_form.show()
                 self.close()
             else:
@@ -128,9 +134,11 @@ class PreviewWindow(QWidget):
         self.LoginButton.clicked.connect(self.open_login_form)
 
         txt = open('data/settings.txt', 'r').read().split('\n')
+        # USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
+        # self.open_form = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
         if str(txt[-2]) != "'":
             USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
-            self.open_form = MainWindow()
+            self.open_form = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
         else:
             self.open_form = LoginWindow()
 
@@ -147,25 +155,28 @@ class PreviewWindow(QWidget):
 class MainWindow(QMainWindow):
     """Форма главного окна"""
     def __init__(self):
-        global current_task
+        global current_task, task_id
         super().__init__()
 
         self.settings = open('data/settings.txt', 'r').read().split('\n')
         uic.loadUi('data/ui/client.ui', self)
         current_task = get(f'http://127.0.0.1:8080/api/task/{self.settings[-1]}').json()
+        task_id = current_task['id']
         set_settings(self)
         self.post_task()
 
         self.decidedTasks.setColumnCount(3)
         self.decidedTasks.setHorizontalHeaderLabels(['ID', 'Название задачи', 'Получено баллов'])
-        self.decidedTasks.horizontalHeader().setDefaultSectionSize(143)
+        self.decidedTasks.horizontalHeader().setDefaultSectionSize(146)
         n_tasks = USER['decided_tasks'].split('%')[2:]
-        self.decidedTasks.setRowCount(len(n_tasks))
         i = 0
         for j in n_tasks:
-            task = get(f'http://127.0.0.1:8080/api/task/{j if not j else 1}').json()
-            self.update_decidedTasks(i, task)
-            i += 1
+            task = get(f'http://127.0.0.1:8080/api/task/{j}')
+            if task:
+                self.decidedTasks.setRowCount(i + 1)
+                task = task.json()
+                self.update_decidedTasks(i, task)
+                i += 1
 
         self.ButtonNextTask.clicked.connect(self.get_next_task)
         self.ButtonPrevTask.clicked.connect(self.get_prev_task)
@@ -226,6 +237,7 @@ class MainWindow(QMainWindow):
         self.labelCalcNums.setText(self.nice_view(self.number_board))
 
     def update_decidedTasks(self, last_section, current_task):
+
         self.decidedTasks.setRowCount(last_section + 1)
         self.decidedTasks.setItem(last_section, 0, QTableWidgetItem(str(current_task['id'])))
         self.decidedTasks.setItem(last_section, 1, QTableWidgetItem(current_task['name']))
@@ -308,8 +320,7 @@ class MainWindow(QMainWindow):
     # Работа с сервером
 
     def get_next_task(self):
-        global current_task
-        task_id = current_task['id']
+        global current_task, task_id
         max_id = get("http://127.0.0.1:8080/api/task/0").json()['count']
         decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')
         if (len(set(decided_tasks)) - 2) != max_id:
@@ -317,12 +328,11 @@ class MainWindow(QMainWindow):
                 task_id = 1
             else:
                 task_id += 1
-            current_task = get(f'http://127.0.0.1:8080/api/task/{task_id}').json()
-            # if str(task_id) in str(decided_tasks):
-            #     self.lineAnswer.setText(current_task['answer'])
-            #     self.labelAnswStatus.setText('✓')
-            #     self.labelAnswStatus.setToolTip('Статус: зачтено')
-            self.post_task()
+            if get(f'http://127.0.0.1:8080/api/task/{task_id}'):
+                current_task = get(f'http://127.0.0.1:8080/api/task/{task_id}').json()
+                self.post_task()
+            else:
+                self.get_next_task()
 
     def report(self):
         global USER, current_task
@@ -331,21 +341,20 @@ class MainWindow(QMainWindow):
             put(f'http://127.0.0.1:8080/api/task/{current_task["id"]}')
 
     def get_prev_task(self):
-        global current_task
-        task_id = current_task['id']
-        decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split('%')
+        global current_task, task_id
+        decided_tasks = get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks'].split()
         max_id = get('http://127.0.0.1:8080/api/task/0').json()['count']
+
         if (len(set(decided_tasks)) - 2) != max_id:
             if task_id == 1:
                 task_id = max_id
             else:
                 task_id -= 1
-            current_task = get(f'http://127.0.0.1:8080/api/task/{task_id}').json()
-            # if str(task_id) in str(get(f'http://127.0.0.1:8080/api/users/{USER["login"]}').json()['decided_tasks']):
-            #     self.lineAnswer.setText(current_task['answer'])
-            #     self.labelAnswStatus.setText('✓')
-            #     self.labelAnswStatus.setToolTip('Статус: зачтено')
-            self.post_task()
+            if get(f'http://127.0.0.1:8080/api/task/{task_id}'):
+                current_task = get(f'http://127.0.0.1:8080/api/task/{task_id}').json()
+                self.post_task()
+            else:
+                self.get_prev_task()
 
     def run(self):
         self.label.setText('OK')
@@ -413,7 +422,8 @@ class MainWindow(QMainWindow):
             self.new_settings[txt[1]] = Button.text() + '&' + txt[2]
 
     def add_task(self):
-        dct = {'name': self.title_lineEdit.text(), 'user_id': USER['id'],
+        print(USER)
+        dct = {'name': self.title_lineEdit.text(), 'user_login': USER['login'],
                'points': task_diff[self.difficult_lvl_comboBox.currentText()],
                'content': self.task_text_TextEdit.toPlainText(), 'answer': self.answer_lineEdit.text()}
         try:
@@ -450,21 +460,28 @@ class MainWindow(QMainWindow):
             self.special_operation('⌫')
 
     def exit_from_account(self):
-        if self.settings[-2] == USER['login']:
-            self.settings.remove(USER['login'])
-            self.settings.remove(self.settings[-1])
-            self.settings.insert(2, "'")
-            self.settings.insert(3, str(current_task['id']))
-            self.write_settings = open("data/settings.txt", "w")
-            self.write_settings.write('\n'.join(self.settings))
-            self.write_settings.close()
+        valid = QMessageBox.question(self, 'Предупреждение',
+                                     "Вы действительно хотите выйти из аккаунта?",
+                                     QMessageBox.Yes, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            if self.settings[-2] == USER['login']:
+                self.settings.remove(USER['login'])
+                self.settings.remove(self.settings[-1])
+                self.settings.insert(2, "'")
+                self.settings.insert(3, str(current_task['id']))
+                self.write_settings = open("data/settings.txt", "w")
+                self.write_settings.write('\n'.join(self.settings))
+                self.write_settings.close()
 
-        self.preview = PreviewWindow()
-        self.preview.show()
-        self.hide()
+            self.preview = PreviewWindow()
+            self.preview.show()
+            self.hide()
 
 
 app = QApplication(sys.argv)
+# txt = open('data/settings.txt', 'r').read().split('\n')
+# USER = get(f'http://127.0.0.1:8080/api/users/{txt[-2]}').json()
+# ex = MainWindow() if USER['status'] != 'Разработчик' else DeveloperClient()
 ex = PreviewWindow()
 ex.show()
 sys.exit(app.exec_())

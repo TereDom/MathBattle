@@ -19,6 +19,10 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(13, 86, 166);
+color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
@@ -77,7 +81,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://vk.com/a.schukin2004&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://vk.com/a.schukin2004&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>
@@ -110,7 +114,9 @@
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(84, 204, 255);</string>
+    <string notr="true">background-color: rgb(84, 204, 255);
+border: 1px solid black;
+border-radius: 5px;</string>
    </property>
    <property name="text">
     <string>Войти</string>
@@ -142,7 +148,7 @@ background-color: rgba(255, 255, 255, 10);</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../img/right-arrow-outline.png</normaloff>../img/right-arrow-outline.png</iconset>
+     <normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</iconset>
    </property>
    <property name="iconSize">
     <size>

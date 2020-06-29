@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Регистрация</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(13, 86, 166);
+color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
@@ -71,7 +75,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://ru.stackoverflow.com/q/851355/255866&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://ru.stackoverflow.com/q/851355/255866&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#ffffff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>
@@ -103,7 +107,7 @@ background-color: rgba(255, 255, 255, 10);</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>../img/right-arrow-outline.png</normaloff>../img/right-arrow-outline.png</iconset>
+     <normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -163,7 +167,9 @@ background-color: rgba(255, 255, 255, 10);</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(120, 255, 62);</string>
+    <string notr="true">background-color: rgb(255, 154, 0);
+border: 1px solid black;
+border-radius: 5px;</string>
    </property>
    <property name="text">
     <string>Зарегистророваться</string>
@@ -297,6 +303,9 @@ background-color: rgba(255, 255, 255, 10);</string>
         <width>170</width>
         <height>20</height>
        </size>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
      </widget>
     </item>

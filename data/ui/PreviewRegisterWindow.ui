@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Добро пожаловать в MathBattle</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(13, 86, 166);
+color: rgb(255, 255, 255);</string>
+  </property>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
@@ -128,7 +132,10 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(120, 255, 62);</string>
+       <string notr="true">background-color: rgb(120, 255, 62);
+background-color: rgb(255, 154, 0);
+border: 1px solid black;
+border-radius: 5px;</string>
       </property>
       <property name="text">
        <string>Зарегистророваться</string>
@@ -155,7 +162,9 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(84, 204, 255);</string>
+       <string notr="true">background-color: rgb(39, 79, 125);
+border: 1px solid black;
+border-radius: 5px;</string>
       </property>
       <property name="text">
        <string>Войти</string>
@@ -179,7 +188,7 @@
     </font>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://ru.stackoverflow.com/q/851355/255866&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://ru.stackoverflow.com/q/851355/255866&quot;&gt;&lt;span style=&quot; text-decoration: underline; color: #ffffff&quot;&gt;Наш сайт⇗&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
    <property name="openExternalLinks">
     <bool>true</bool>

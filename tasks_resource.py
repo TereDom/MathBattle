@@ -14,15 +14,23 @@ parser.add_argument('points', required=True, type=int)
 parser.add_argument('user_id', required=True, type=int)
 
 
+def abort_if_task_not_found(task_id):
+    session = db_session.create_session()
+    task = session.query(Task).filter(Task.id == task_id).first()
+    if not task:
+        abort(404, message=f"Task {task_id} not found")
+
+
 class TaskResource(Resource):
     def get(self, task_id):
         session = db_session.create_session()
         if int(task_id):
+            abort_if_task_not_found(task_id)
             tasks = session.query(Task).filter(Task.id == task_id).first()
             return jsonify({'name': tasks.name, 'content': tasks.content, 'answer': tasks.answer,
                             'points': tasks.points, 'user_login': tasks.user_login, 'id': tasks.id})
         else:
-            count = session.query(Task).count()
+            count = list(reversed(session.query(Task).order_by(Task.id).all()))[0].id
             return jsonify({'count': count})
 
     def put(self, task_id):
@@ -35,7 +43,7 @@ class TaskResource(Resource):
 
     def delete(self, task_id):
         session = db_session.create_session()
-        task = session.query(Task).filter(Task.id == task_id)
+        task = session.query(Task).filter(Task.id == task_id).first()
         session.delete(task)
         session.commit()
         session.close()
@@ -70,7 +78,9 @@ class TaskListResource(Resource):
 
     def delete(self, user_login):
         session = db_session.create_session()
-        task = session.query(Task).filter(Task.user_id == user_login).all().delete()
+        tasks = session.query(Task).filter(Task.user_login == user_login).all()
+        for task in tasks:
+            session.delete(task)
         session.commit()
         session.close()
         return jsonify({'success': 'OK'})

@@ -15,6 +15,13 @@ parser.add_argument('hashed_password', required=True)
 parser.add_argument('birthday', required=True)
 
 
+def abort_if_user_not_found(user_login):
+    session = db_session.create_session()
+    user = session.query(User).filter(User.login == user_login).first()
+    if not user:
+        abort(404, message=f"User {user_login} not found")
+
+
 class UserResource(Resource):
     def put(self, user_login):
         reported = request.form['reported']
@@ -42,11 +49,12 @@ class UserResource(Resource):
         return jsonify({'success': 'OK'})
 
     def get(self, user_login):
+        abort_if_user_not_found(user_login)
         session = db_session.create_session()
         user = session.query(User).filter(User.login == user_login).first()
         return jsonify({'nickname': user.nickname, 'status': user.status, 'login': user.login,
                         'hashed_password': user.hashed_password, 'birthday': user.birthday,
-                        'decided_tasks': user.decided_tasks, 'reports': user.reports, 'points': user.points})
+                        'decided_tasks': user.decided_tasks, 'reports': user.reports, 'points': user.points, 'user_id': user.id})
 
 
 class UserListResource(Resource):
