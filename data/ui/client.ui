@@ -35,9 +35,20 @@
     </property>
     <item row="1" column="0">
      <widget class="QScrollArea" name="scrollArea">
+      <property name="minimumSize">
+       <size>
+        <width>1053</width>
+        <height>695</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>1053</width>
+        <height>695</height>
+       </size>
+      </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(13, 86, 166);
-</string>
+       <string notr="true">background-color: rgb(15, 104, 199);</string>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>

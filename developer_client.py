@@ -98,12 +98,10 @@ class DeveloperClient(QWidget):
                                      "Вы действительно хотите выйти из аккаунта?",
                                      QMessageBox.Yes, QMessageBox.No)
         if valid == QMessageBox.Yes:
-            if self.settings[-2] != "'":
-                self.settings.remove(self.settings[-2])
-                self.settings.insert(1, "'")
+            self.settings.remove(self.settings[0])
+            self.settings.insert(0, "'")
 
-                self.write_settings = open("data/settings.txt", "w")
-                self.write_settings.write('\n'.join(self.settings))
-                self.write_settings.close()
-
-            self.close()
+            self.write_settings = open("data/settings.txt", "w")
+            self.write_settings.write('\n'.join(self.settings))
+            self.write_settings.close()
+        self.close()
