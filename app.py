@@ -1,12 +1,18 @@
 from flask import Flask, render_template, url_for, redirect
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+
+import os
+import os.path as op
+
 from data import db_session
 
 from data.__all_models import *
 from data.__all_forms import *
 
-from api import *
-import api
+from admin import *
+
+# from api import *
+# import api
 
 
 db_session.global_init('db/DataBase.sqlite')
@@ -150,7 +156,7 @@ def new_task():
         session.commit()
         task.str_id = str(task.id).rjust(4, '0')
         session.commit()
-        # return redirect(f'/task{task.id}')
+        # return redirect(f'/task/{task.id}')
         return redirect('/')
     return render_template(**param)
 
@@ -163,6 +169,7 @@ def task(task_id):
     param = dict()
     param['form'] = form
     param['title'] = task.title
+
     param['base_style_way'] = url_for('static', filename='css/style.css')
     param['style_way'] = url_for('static', filename='css/task.css')
     param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
@@ -189,5 +196,23 @@ def task(task_id):
 
 
 if __name__ == '__main__':
-    app.register_blueprint(api.blueprint)
+    # app.register_blueprint(api.blueprint)
+
+    session = db_session.create_session()
+
+    admin = Admin(app, index_view=MyAdminIndexView())
+
+    path = op.join(op.dirname(__file__), '')
+    try:
+        os.mkdir(path)
+    except OSError:
+        pass
+    admin.add_view(fileadmin.FileAdmin(path, '', name='all'))
+
+    admin.add_view(MyUserAdmin(session))
+    admin.add_view(MyTaskAdmin(session))
+    admin.add_view(MyAnswerAdmin(session))
+    admin.add_view(MyForumTaskAdmin(session))
+    admin.add_view(MyForumAnswerAdmin(session))
+
     main()
