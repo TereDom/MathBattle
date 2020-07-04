@@ -1,10 +1,12 @@
 from flask_admin import Admin, expose, AdminIndexView
 from flask_admin.contrib import fileadmin
 from flask_admin.contrib.sqlamodel import ModelView
+from flask_login import current_user
+from flask import redirect
 
 from data.__all_models import *
 
-from app import current_user, redirect
+# from app import current_user, redirect
 
 
 class MyAdminIndexView(AdminIndexView):

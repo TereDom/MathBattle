@@ -11,8 +11,8 @@ from data.__all_forms import *
 
 from admin import *
 
-# from api import *
-# import api
+from api import *
+import api
 
 
 db_session.global_init('db/DataBase.sqlite')
@@ -166,10 +166,11 @@ def task(task_id):
     form = NewAnswerForm()
     session = db_session.create_session()
     task = session.query(ForumTask).filter(ForumTask.id == task_id).first()
+    if not task:
+        return redirect('/')
     param = dict()
     param['form'] = form
     param['title'] = task.title
-
     param['base_style_way'] = url_for('static', filename='css/style.css')
     param['style_way'] = url_for('static', filename='css/task.css')
     param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
@@ -195,8 +196,57 @@ def task(task_id):
     return render_template(**param)
 
 
+@app.route('/task/<task_id>/edit_answer/<answer_id>', methods=['POST', 'GET'])
+@login_required
+def edit(task_id, answer_id):
+    form = NewAnswerForm()
+    session = db_session.create_session()
+    task = session.query(ForumTask).filter(ForumTask.id == task_id).first()
+    answer = session.query(ForumAnswer).filter(ForumAnswer.id == answer_id).first()
+    if answer.user_id != current_user.id or not answer:
+        return redirect(f'/task/{task_id}')
+    if not task:
+        return redirect('/')
+    param = dict()
+    param['title'] = task.title
+    param['base_style_way'] = url_for('static', filename='css/style.css')
+    param['style_way'] = url_for('static', filename='css/task.css')
+    param['calculate_script_way'] = url_for('static', filename='js/calculate.js')
+    param['template_name_or_list'] = 'task.html'
+    param['search'] = False
+    param['new_task'] = True
+    param['calculate'] = True
+    param['bootstrap'] = False
+    param['task'] = task
+    param['answers'] = session.query(ForumAnswer).filter(ForumAnswer.task_id == task_id)
+    task.answers = len(list(param['answers']))
+    task.views += 1
+    session.commit()
+    if form.validate_on_submit():
+        param['form'] = form
+        answer.content = form.answer_field.data
+        session.commit()
+        return redirect(f'/task/{task_id}#{answer.id}')
+    form.answer_field.data = answer.content
+    param['form'] = form
+    return render_template(**param)
+
+
+@app.route('/task/<task_id>/delete_answer/<answer_id>', methods=['GET', 'POST'])
+def delete(task_id, answer_id):
+    session = db_session.create_session()
+    answer = session.query(ForumAnswer).filter(ForumAnswer.id == answer_id).first()
+    if not answer or (current_user.id != answer.user_id and 'admin' not in current_user.status):
+        return redirect(f'/task/{task_id}')
+    if not task:
+        return redirect('/')
+    session.delete(answer)
+    session.commit()
+    return redirect(f'/task/{task_id}')
+
+
 if __name__ == '__main__':
-    # app.register_blueprint(api.blueprint)
+    app.register_blueprint(api.blueprint)
 
     session = db_session.create_session()
 

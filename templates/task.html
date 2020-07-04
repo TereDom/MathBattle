@@ -33,6 +33,28 @@
         <p class="answer_content">
             {{answer.content}}
         </p>
+        {% if answer.user_id == current_user.id or current_user.status == "admin" %}
+        <div class="answer_info">
+            <div class="left">
+
+            </div>
+            <div class="right">
+                {% if current_user.id == answer.user_id %}
+                <h4>
+                    <a href="/task/{{task.id}}/edit_answer/{{answer.id}}">
+                        <i class="fa fa-pen"></i>
+                    </a>
+                </h4>
+                {% endif %}
+                <h4>
+                    <a href="/task/{{task.id}}/delete_answer/{{answer.id}}">
+                        <i class="fa fa-trash-alt"></i>
+                    </a>
+                <
+
+            </div>
+        </div>
+        {% endif %}
     </div>
     {% endfor %}
     {% if current_user.is_authenticated %}
