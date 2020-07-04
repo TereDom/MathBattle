@@ -325,3 +325,29 @@ form{
     padding: 0px 0px 0px 0px;
     margin: 0px 0px 0px 0px;
 }
+
+.header_right_bar>div{
+    display: inline-block;
+}
+
+.header_right_bar>div>p{
+    cursor: pointer;
+}
+
+.header_right_bar>div:hover .menu_list{
+    display: block;
+}
+
+.menu_list li{
+    position: relative;
+    list-style: none;
+}
+
+.menu_list{
+    display: none;
+    position: absolute;
+    background-color: #808080;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #000000;
+}

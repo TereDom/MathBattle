@@ -24,7 +24,14 @@
                 </a>
                 <div class="header_right_bar">
                     {% if current_user.is_authenticated %}
-                        {{current_user.name}}
+                        <div>
+                            <p>{{current_user.name}}</p>
+                            <ul class="menu_list">
+                                <li class="date">Дата регистрации:  </li>
+                                <li><hr color="black" size="4"></li>
+                                <li class="points">Баллов:  {{current_user.points}}</li>
+                            </ul>
+                        </div>
                         <a class="sign_out" href="/sign_out">Выйти</a>
                     {% else %}
                         <a class="sign_up" href="/sign_up">Зарегистрироваться</a>
