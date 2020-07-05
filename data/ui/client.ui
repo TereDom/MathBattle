@@ -37,6 +37,7 @@
      <widget class="QScrollArea" name="scrollArea">
       <property name="styleSheet">
        <string notr="true">background-color: rgb(13, 86, 166);
+
 </string>
       </property>
       <property name="frameShadow">
@@ -93,11 +94,24 @@
            </font>
           </property>
           <property name="styleSheet">
-           <string notr="true">border: 1px solid black;
-color: rgb(255, 255, 255);
-background-color: rgb(13, 86, 166);
-border-radius: 5px;
-</string>
+           <string notr="true">QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}
+
+QGroupBox {
+	border-radius: 2px;
+	border: 1px solid white;
+}</string>
           </property>
           <property name="title">
            <string>Поиск задания по ID:</string>
@@ -171,10 +185,7 @@ border-radius: 5px;  </string>
             <string>Найти задачу по ID</string>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>Найти</string>
@@ -229,11 +240,24 @@ border-radius: 5px;</string>
            <string/>
           </property>
           <property name="styleSheet">
-           <string notr="true">border: 1px solid black;
-color: rgb(255, 255, 255);
-background-color: rgb(13, 86, 166);
-border-radius: 5px;
-</string>
+           <string notr="true">QGroupBox {
+	border-radius: 2px;
+	border: 1px solid white;
+}
+
+QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}</string>
           </property>
           <property name="title">
            <string>Калькулятор:</string>
@@ -262,10 +286,7 @@ border-radius: 5px;
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>0</string>
@@ -295,10 +316,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>1</string>
@@ -328,10 +346,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>4</string>
@@ -361,10 +376,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>/</string>
@@ -394,10 +406,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>2</string>
@@ -427,10 +436,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>3</string>
@@ -484,10 +490,7 @@ border-radius: 5px;</string>
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>8</string>
@@ -529,10 +532,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>+</string>
@@ -583,10 +583,7 @@ border-radius: 5px;</string>
             <bool>true</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>7</string>
@@ -631,10 +628,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>6</string>
@@ -664,10 +658,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>5</string>
@@ -697,10 +688,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>*</string>
@@ -730,10 +718,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>=</string>
@@ -763,10 +748,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>-</string>
@@ -796,10 +778,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>9</string>
@@ -838,7 +817,8 @@ border-radius: 5px;</string>
             <bool>false</bool>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(87, 158, 245);</string>
+            <string notr="true">background-color: rgb(87, 158, 245);
+</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::Box</enum>
@@ -895,10 +875,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>.</string>
@@ -928,10 +905,7 @@ border-radius: 5px;</string>
             <cursorShape>PointingHandCursor</cursorShape>
            </property>
            <property name="styleSheet">
-            <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string>⌫</string>
@@ -1018,10 +992,20 @@ border: 0;</string>
            <string>Выйти из аккаунта</string>
           </property>
           <property name="styleSheet">
-           <string notr="true">border: 1px solid black;
+           <string notr="true">QPushButton {
+border: 1px solid black;	
 border-radius: 5px;
 background-color: rgb(255, 154, 0);
-gridline-color: rgb(166, 100, 0);</string>
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
           </property>
           <property name="text">
            <string>Выйти</string>
@@ -1162,7 +1146,8 @@ border-radius: 5px;
            </palette>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(13, 86, 166);</string>
+           <string notr="true">background-color: rgb(13, 86, 166);
+</string>
           </property>
           <property name="currentIndex">
            <number>0</number>
@@ -1428,10 +1413,19 @@ border-radius: 5px;  </string>
               <string>Проверить ответ</string>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+              <string notr="true">QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}</string>
              </property>
              <property name="text">
               <string>Проверить</string>
@@ -1529,11 +1523,11 @@ color: rgb(255, 255, 255);
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Как принято считать, тщательные исследования конкурентов могут быть представлены в исключительно положительном свете. Не следует, однако, забывать, что понимание сути ресурсосберегающих технологий выявляет срочную потребность первоочередных требований. Но представители современных социальных резервов объединены в целые кластеры себе подобных. Противоположная точка зрения подразумевает, что действия представителей оппозиции лишь добавляют фракционных разногласий и объявлены нарушающими общечеловеческие нормы этики и морали. Тщательные исследования конкурентов рассмотрены исключительно в разрезе маркетинговых и финансовых предпосылок. Кстати, представители современных социальных резервов ассоциативно распределены по отраслям.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;В рамках спецификации современных стандартов, предприниматели в сети интернет, превозмогая сложившуюся непростую экономическую ситуацию, объявлены нарушающими общечеловеческие нормы этики и морали. Принимая во внимание показатели успешности, глубокий уровень погружения не даёт нам иного выбора, кроме определения распределения внутренних резервов и ресурсов. А также сделанные на базе интернет-аналитики выводы лишь добавляют фракционных разногласий и рассмотрены исключительно в разрезе маркетинговых и финансовых предпосылок. Являясь всего лишь частью общей картины, базовые сценарии поведения пользователей в равной степени предоставлены сами себе.&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Кстати, акционеры крупнейших компаний формируют глобальную экономическую сеть и при этом - объективно рассмотрены соответствующими инстанциями. Но социально-экономическое развитие требует определения и уточнения позиций, занимаемых участниками в отношении поставленных задач. А ещё стремящиеся вытеснить традиционное производство, нанотехнологии лишь добавляют фракционных разногласий и разоблачены!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2';&quot;&gt;Как принято считать, тщательные исследования конкурентов могут быть представлены в исключительно положительном свете. Не следует, однако, забывать, что понимание сути ресурсосберегающих технологий выявляет срочную потребность первоочередных требований. Но представители современных социальных резервов объединены в целые кластеры себе подобных. Противоположная точка зрения подразумевает, что действия представителей оппозиции лишь добавляют фракционных разногласий и объявлены нарушающими общечеловеческие нормы этики и морали. Тщательные исследования конкурентов рассмотрены исключительно в разрезе маркетинговых и финансовых предпосылок. Кстати, представители современных социальных резервов ассоциативно распределены по отраслям.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2';&quot;&gt;В рамках спецификации современных стандартов, предприниматели в сети интернет, превозмогая сложившуюся непростую экономическую ситуацию, объявлены нарушающими общечеловеческие нормы этики и морали. Принимая во внимание показатели успешности, глубокий уровень погружения не даёт нам иного выбора, кроме определения распределения внутренних резервов и ресурсов. А также сделанные на базе интернет-аналитики выводы лишь добавляют фракционных разногласий и рассмотрены исключительно в разрезе маркетинговых и финансовых предпосылок. Являясь всего лишь частью общей картины, базовые сценарии поведения пользователей в равной степени предоставлены сами себе.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2';&quot;&gt;Кстати, акционеры крупнейших компаний формируют глобальную экономическую сеть и при этом - объективно рассмотрены соответствующими инстанциями. Но социально-экономическое развитие требует определения и уточнения позиций, занимаемых участниками в отношении поставленных задач. А ещё стремящиеся вытеснить традиционное производство, нанотехнологии лишь добавляют фракционных разногласий и разоблачены!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
            <widget class="QPushButton" name="reportButton">
@@ -1563,10 +1557,22 @@ p, li { white-space: pre-wrap; }
              <string>Пожаловаться на задачу</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">border: 1px solid black;
+             <string notr="true">QPushButton {
+border: 1px solid black;	
 border-radius: 5px;
 background-color: rgb(255, 154, 0);
-gridline-color: rgb(166, 100, 0);</string>
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}
+
+</string>
             </property>
             <property name="text">
              <string>!</string>
@@ -1692,10 +1698,20 @@ color: rgb(255, 255, 255);</string>
              <string>Следующая задача</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">border: 1px solid black;
+             <string notr="true">QPushButton {
+border: 1px solid black;	
 border-radius: 5px;
 background-color: rgb(255, 154, 0);
-gridline-color: rgb(166, 100, 0);</string>
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
             </property>
             <property name="text">
              <string>⮞</string>
@@ -1755,10 +1771,20 @@ gridline-color: rgb(166, 100, 0);</string>
              <string>Предидущая задача</string>
             </property>
             <property name="styleSheet">
-             <string notr="true">border: 1px solid black;
+             <string notr="true">QPushButton {
+border: 1px solid black;	
 border-radius: 5px;
 background-color: rgb(255, 154, 0);
-gridline-color: rgb(166, 100, 0);</string>
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
             </property>
             <property name="text">
              <string>⮜</string>
@@ -2387,10 +2413,19 @@ background-color: rgb(39, 79, 125);</string>
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
             <property name="styleSheet">
-             <string notr="true">background-color: rgb(39, 79, 125);
-color: rgb(255, 255, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+             <string notr="true">QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}</string>
             </property>
             <property name="text">
              <string>Добавить</string>

@@ -114,9 +114,19 @@ color: rgb(255, 255, 255);</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(84, 204, 255);
-border: 1px solid black;
-border-radius: 5px;</string>
+    <string notr="true">QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}</string>
    </property>
    <property name="text">
     <string>Войти</string>
@@ -148,7 +158,7 @@ background-color: rgba(255, 255, 255, 10);</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</iconset>
+     <normaloff>../../../../../Антон/Desktop/data/img/right-arrow-outline.png</normaloff>../../../../../Антон/Desktop/data/img/right-arrow-outline.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -267,7 +277,13 @@ background-color: rgba(255, 255, 255, 10);</string>
     <enum>Qt::DefaultContextMenu</enum>
    </property>
    <property name="styleSheet">
-    <string notr="true">color: rgb(255, 0, 0);</string>
+    <string notr="true">QLabel {
+	color: rgb(255, 0, 0);
+	text-align: center;
+}</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
    <property name="textFormat">
     <enum>Qt::AutoText</enum>

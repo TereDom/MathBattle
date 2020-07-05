@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>259</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -132,10 +132,20 @@ color: rgb(255, 255, 255);</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(120, 255, 62);
+       <string notr="true">QPushButton {
+border: 1px solid black;	
+border-radius: 5px;
 background-color: rgb(255, 154, 0);
-border: 1px solid black;
-border-radius: 5px;</string>
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
       </property>
       <property name="text">
        <string>Зарегистророваться</string>
@@ -162,9 +172,19 @@ border-radius: 5px;</string>
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(39, 79, 125);
-border: 1px solid black;
-border-radius: 5px;</string>
+       <string notr="true">QPushButton {
+	border: 1px solid black;
+	color: rgb(255, 255, 255);
+	background-color:  rgb(39, 79, 125);
+	border-radius: 5px;
+}
+QPushButton:hover {
+	background-color: rgb(13, 86, 166);
+}
+
+QPushButton:pressed {
+	background-color:  rgb(24, 50, 79);
+}</string>
       </property>
       <property name="text">
        <string>Войти</string>

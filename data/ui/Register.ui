@@ -107,7 +107,7 @@ background-color: rgba(255, 255, 255, 10);</string>
    </property>
    <property name="icon">
     <iconset>
-     <normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</normaloff>C:/Users/Антон/Desktop/data/img/right-arrow-outline.png</iconset>
+     <normaloff>../../../../../Антон/Desktop/data/img/right-arrow-outline.png</normaloff>../../../../../Антон/Desktop/data/img/right-arrow-outline.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -167,9 +167,20 @@ background-color: rgba(255, 255, 255, 10);</string>
     </font>
    </property>
    <property name="styleSheet">
-    <string notr="true">background-color: rgb(255, 154, 0);
-border: 1px solid black;
-border-radius: 5px;</string>
+    <string notr="true">QPushButton {
+border: 1px solid black;	
+border-radius: 5px;
+background-color: rgb(255, 154, 0);
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
    </property>
    <property name="text">
     <string>Зарегистророваться</string>
