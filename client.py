@@ -2,12 +2,12 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox
-from requests import get, post, put
+from PyQt5.uic.properties import QtCore
+from requests import get, post, put, delete
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from data.__all_models import *
 from data import db_session
-from developer_client import DeveloperClient
 
 
 def set_password(password):
@@ -315,9 +315,15 @@ class MainWindow(QMainWindow):
 
     def update_decidedTasks(self, last_section, current_task):
         self.decidedTasks.setRowCount(last_section + 1)
+
         self.decidedTasks.setItem(last_section, 0, QTableWidgetItem(str(current_task['id'])))
+        self.decidedTasks.item(last_section, 0).setFlags(self.decidedTasks.item(last_section, 0).flags() ^ Qt.ItemIsEditable)
+
         self.decidedTasks.setItem(last_section, 1, QTableWidgetItem(current_task['name']))
+        self.decidedTasks.item(last_section, 1).setFlags(self.decidedTasks.item(last_section, 1).flags() ^ Qt.ItemIsEditable)
+
         self.decidedTasks.setItem(last_section, 2, QTableWidgetItem("+" + str(current_task['points'])))
+        self.decidedTasks.item(last_section, 2).setFlags(self.decidedTasks.item(last_section, 2).flags() ^ Qt.ItemIsEditable)
 
     def update_profile(self):
         """Функция обновления профиля"""
@@ -464,9 +470,10 @@ class MainWindow(QMainWindow):
             self.error_label.setText('Все поля должны быть заполнены')
             return
 
-        self.error_label.setStyleSheet('color: rgb(0, 200, 0);')
-        self.error_label.setText('Задача успешно добавлена!')
         post(f'http://127.0.0.1:8080/api/tasks/{current_task["user_login"]}', json=dct)
+        lst_tasks = get(f'http://127.0.0.1:8080/api/tasks/{USER["login"]}').json()['tasks']
+        self.error_label.setStyleSheet('color: rgb(0, 200, 0);')
+        self.error_label.setText(f'Задача успешно добавлена! ID задачи: {max([task["id"] for task in lst_tasks])}')
 
     # обработка кнопок клавиатуры
 
@@ -482,6 +489,110 @@ class MainWindow(QMainWindow):
 
         if event.key() == Qt.Key_Backspace:
             self.special_operation('⌫')
+
+
+class DeveloperClient(QWidget):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('data/ui/developer_client.ui', self)
+        self.settings = open('data/settings.txt', 'r').read().split('\n')
+        self.tasks_list = get("http://127.0.0.1:8080/api/tasks/'").json()['tasks']
+        self.Nickname_small.setText(USER['nickname'])
+
+        self.del_task_button.clicked.connect(self.del_task)
+        self.open_user_tasks_button.clicked.connect(self.open_user_tasks)
+        self.del_user_button.clicked.connect(self.del_user)
+        self.update_tasks_button.clicked.connect(self.get_reported_tasks)
+        self.ButtonExit.clicked.connect(self.exit_from_account)
+
+        self.get_reported_tasks()
+
+    def get_reported_tasks(self):
+        self.tasks_list = get("http://127.0.0.1:8080/api/tasks/'").json()['tasks']
+        self.update_tasks()
+        self.labelStatus.setText("Все задачи")
+
+    def del_task(self):
+        rows = list(set([i.row() for i in self.tableWidget.selectedItems()]))
+        if rows:
+            valid = QMessageBox.question(self, 'Предупреждение',
+                                         "Вы действительно удалить выбранные задачи?\n" +
+                                         f"ID задач: {list(map(lambda i: int(self.tableWidget.item(i, 0).text()), rows))}",
+                                         QMessageBox.Yes, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                for i in rows:
+                    delete(f"http://127.0.0.1:8080/api/task/{int(self.tableWidget.item(i, 0).text())}")
+                if len(self.labelStatus.text()) > 10:
+                    self.tasks_list = get(f"http://127.0.0.1:8080/api/tasks/{self.labelStatus.text().split()[-1]}").json()['tasks']
+                    self.update_tasks()
+                else:
+                    self.get_reported_tasks()
+        else:
+            warWindow = QMessageBox.warning(self, 'Предупреждение',
+                                            'Отметьте задачи для удаления!')
+
+    def open_user_tasks(self):
+        row = list(set([i.row() for i in self.tableWidget.selectedItems()]))
+        if len(row) == 1:
+            self.tasks_list = get(f"http://127.0.0.1:8080/api/tasks/{str(self.tableWidget.item(row[0], 4).text())}").json()['tasks']
+            self.labelStatus.setText(f"Все задачи пользователя {str(self.tableWidget.item(row[0], 4).text())}")
+            self.update_tasks()
+        else:
+            warWindow = QMessageBox.warning(self, 'Предупреждение',
+                                            'Отметьте только одного пользователя!')
+
+    def del_user(self):
+        row = list(set([i.row() for i in self.tableWidget.selectedItems()]))
+        if len(row) == 1:
+            valid = QMessageBox.question(self, 'Предупреждение',
+                                         f"Вы действительно хотите удалить пользователя {str(self.tableWidget.item(row[0], 4).text())}?",
+                                         QMessageBox.Yes, QMessageBox.No)
+            if valid == QMessageBox.Yes:
+                delete(f"http://127.0.0.1:8080/api/tasks/{str(self.tableWidget.item(row[0], 4).text())}")
+                delete(f"http://127.0.0.1:8080/api/users/{str(self.tableWidget.item(row[0], 4).text())}")
+                self.get_reported_tasks()
+        else:
+            warWindow = QMessageBox.warning(self, 'Предупреждение',
+                                            'Отметьте только одного пользователя!')
+
+    def update_tasks(self):
+        for j in range(len(self.tasks_list)):
+            self.tableWidget.setRowCount(j + 1)
+            task = self.tasks_list[j]
+            self.tableWidget.setItem(j, 0, QTableWidgetItem(str(task['id'])))
+            self.tableWidget.item(j, 0).setFlags(self.tableWidget.item(j, 0).flags() ^ Qt.ItemIsEditable)
+
+            self.tableWidget.setItem(j, 1, QTableWidgetItem(str(task['name'])))
+            self.tableWidget.item(j, 1).setFlags(self.tableWidget.item(j, 1).flags() ^ Qt.ItemIsEditable)
+
+            self.tableWidget.setItem(j, 2, QTableWidgetItem(str(task['content'])))
+            self.tableWidget.item(j, 2).setFlags(self.tableWidget.item(j, 2).flags() ^ Qt.ItemIsEditable)
+
+            self.tableWidget.setItem(j, 3, QTableWidgetItem(str(task['answer'])))
+            self.tableWidget.item(j, 3).setFlags(self.tableWidget.item(j, 3).flags() ^ Qt.ItemIsEditable)
+
+            self.tableWidget.setItem(j, 4, QTableWidgetItem(str(task['user_login'])))
+            self.tableWidget.item(j, 4).setFlags(self.tableWidget.item(j, 4).flags() ^ Qt.ItemIsEditable)
+
+            self.tableWidget.setItem(j, 5, QTableWidgetItem(str(task['reports'])))
+            self.tableWidget.item(j, 5).setFlags(self.tableWidget.item(j, 5).flags() ^ Qt.ItemIsEditable)
+
+        self.tableWidget.resizeColumnsToContents()
+
+    def exit_from_account(self):
+        valid = QMessageBox.question(self, 'Предупреждение',
+                                     "Вы действительно хотите выйти из аккаунта?",
+                                     QMessageBox.Yes, QMessageBox.No)
+        if valid == QMessageBox.Yes:
+            if self.settings[-2] != "'":
+                self.settings.remove(self.settings[-2])
+                self.settings.insert(0, "'")
+
+                self.write_settings = open("data/settings.txt", "w")
+                self.write_settings.write('\n'.join(self.settings))
+                self.write_settings.close()
+
+            self.close()
 
 
 app = QApplication(sys.argv)
