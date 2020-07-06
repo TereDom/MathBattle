@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
 import os
@@ -20,7 +20,8 @@ login_manager.init_app(app)
 
 
 def main():
-    app.run(host='127.0.0.1', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 @login_manager.user_loader
