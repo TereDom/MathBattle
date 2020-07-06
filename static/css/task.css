@@ -1,0 +1,64 @@
+.answer_info .left,
+.answer_info .right,
+.task_info .left,
+.task_info .right{
+    display: inline-block;
+    width: 35%;
+}
+
+.answer_info .left,
+.task_info .left{
+    width: 64%;
+}
+
+.answer_info .right,
+.task_info .right{
+    text-align: end;
+}
+
+.answer_info h4,
+.answer_info h2,
+.task_info h4,
+.task_info h2{
+    display: inline-block;
+    padding: 10px
+}
+
+.answer_info h2,
+.task_info h2{
+    padding: 0px 0px 10px 10px;
+}
+
+.task_title a{
+    color: #000000;
+    text-decoration: none;
+}
+
+.task_id a{
+    color: #000000;
+}
+
+.task{
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #808080;
+    color: #e7e7e7;
+}
+
+form input{
+    min-width: 69%;
+}
+
+form #submit{
+    min-width: 30%;
+}
+
+#answer_field{
+    border: 2px solid #666666;
+    border-radius: 10px;
+    height: 29px;
+}
+
+h4 a i{
+    color: #ff8d00;
+}

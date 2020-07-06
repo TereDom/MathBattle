@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Добавление обсуждения</h1>
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(class="form-control", type="title") }}<br>
+        {% for error in form.title.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.short_description.label }}<br>
+        {{ form.short_description(class="form-control", type="short_description") }}<br>
+        {% for error in form.short_description.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
+    </p>
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(class="form-control", type="content") }}<br>
+        {% for error in form.content.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endfor %}
+    </p>
+    <p>{{ form.submit(type="submit") }} <a href="/" class="button" style="color: #ff0000;">Отмена</a> </p>
+</form>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for task in tasks %}
+<div class="task_list">
+    <div class="task">
+        <div class="task_info title">
+            <h2 class="task_id"><a href="task/{{task.id}}">#{{task.str_id}}</a></h2>
+            <h2 class="task_title"><a href="task/{{task.id}}">{{task.title}}</a></h2>
+        </div>
+        <p class="task_short_description">
+            {{task.short_description}}
+        </p>
+        <div class="task_info">
+            <div class="left">
+                <h4 class="task_view_count"><i class="fa fa-eye"></i> {{task.views}}</h4>
+                <h4 class="task_comment_count"><i class="fa fa-edit"></i> {{task.answers}}</h4>
+            </div>
+            <div class="right">
+                <h4 class="task_datetime"><i class="fa fa-calendar-alt"></i> {{task.datetime}}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
