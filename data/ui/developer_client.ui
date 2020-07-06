@@ -409,7 +409,7 @@ border-radius: 5px;</string>
    <property name="geometry">
     <rect>
      <x>840</x>
-     <y>130</y>
+     <y>120</y>
      <width>181</width>
      <height>101</height>
     </rect>
@@ -470,11 +470,61 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Обновить</string>
        </property>
        <property name="icon">
         <iconset>
          <normaloff>../../../../../Антон/Desktop/data/img/update.jpg</normaloff>../../../../../Антон/Desktop/data/img/update.jpg</iconset>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QPushButton" name="del_user_button">
+       <property name="minimumSize">
+        <size>
+         <width>77</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>7</pointsize>
+         <weight>9</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	color: rgb(255, 255, 255);
+	font: 75 7pt &quot;MS Shell Dlg 2&quot;;
+border: 1px solid black;	
+border-radius: 5px;
+background-color: rgb(255, 154, 0);
+gridline-color: rgb(166, 100, 0);
+}
+
+QPushButton:hover {
+	background-color: rgb(255, 174, 10);
+}
+
+QPushButton:pressed {
+	background-color: rgb(225, 124, 0);
+}</string>
+       </property>
+       <property name="text">
+        <string>Удалить user'a</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../../../../Антон/Desktop/data/img/del_user.jpg</normaloff>../../../../../Антон/Desktop/data/img/del_user.jpg</iconset>
        </property>
       </widget>
      </item>
@@ -494,12 +544,16 @@ QPushButton:pressed {
        </property>
        <property name="font">
         <font>
-         <family>Comic Sans MS</family>
-         <pointsize>10</pointsize>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>8</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
+	font: 8pt &quot;MS Shell Dlg 2&quot;;
 	border: 1px solid black;
 	color: rgb(255, 255, 255);
 	background-color: rgb(81, 144, 226);
@@ -514,7 +568,7 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Задачи user'а</string>
        </property>
        <property name="icon">
         <iconset>
@@ -538,12 +592,17 @@ QPushButton:pressed {
        </property>
        <property name="font">
         <font>
-         <family>Comic Sans MS</family>
-         <pointsize>10</pointsize>
+         <family>MS Shell Dlg 2</family>
+         <pointsize>7</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
         </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QPushButton {
+	color: rgb(255, 255, 255);
+	font: 7pt &quot;MS Shell Dlg 2&quot;;
 border: 1px solid black;	
 border-radius: 5px;
 background-color: rgb(255, 154, 0);
@@ -559,56 +618,11 @@ QPushButton:pressed {
 }</string>
        </property>
        <property name="text">
-        <string/>
+        <string>Удалить задачи</string>
        </property>
        <property name="icon">
         <iconset>
          <normaloff>../../../../../Антон/Desktop/data/img/delite.png</normaloff>../../../../../Антон/Desktop/data/img/delite.png</iconset>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QPushButton" name="del_user_button">
-       <property name="minimumSize">
-        <size>
-         <width>77</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>75</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="font">
-        <font>
-         <family>Comic Sans MS</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-border: 1px solid black;	
-border-radius: 5px;
-background-color: rgb(255, 154, 0);
-gridline-color: rgb(166, 100, 0);
-}
-
-QPushButton:hover {
-	background-color: rgb(255, 174, 10);
-}
-
-QPushButton:pressed {
-	background-color: rgb(225, 124, 0);
-}</string>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../../../../../Антон/Desktop/data/img/del_user.jpg</normaloff>../../../../../Антон/Desktop/data/img/del_user.jpg</iconset>
        </property>
       </widget>
      </item>
