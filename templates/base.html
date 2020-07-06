@@ -25,9 +25,9 @@
                 <div class="header_right_bar">
                     {% if current_user.is_authenticated %}
                         <div>
-                            <p>{{current_user.name}}</p>
+                            <p>{{current_user.nickname}}</p>
                             <ul class="menu_list">
-                                <li class="date">Дата регистрации:  </li>
+                                <li class="date">Дата рождения:  {{current_user.birthday}}</li>
                                 <li><hr color="black" size="4"></li>
                                 <li class="points">Баллов:  {{current_user.points}}</li>
                             </ul>

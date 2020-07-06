@@ -11,9 +11,6 @@ from data.__all_forms import *
 
 from admin import *
 
-from api import *
-import api
-
 
 db_session.global_init('db/DataBase.sqlite')
 app = Flask(__name__)
@@ -86,7 +83,7 @@ def sign_up():
             param['message'] = "Такой пользователь уже есть"
             return render_template(**param)
         user = User(
-            name=form.name.data,
+            nickname=form.name.data,
             login=str(form.login.data)
         )
         user.set_password(form.password.data)
@@ -246,10 +243,13 @@ def delete(task_id, answer_id):
 
 
 if __name__ == '__main__':
-    app.register_blueprint(api.blueprint)
+    from api import *
 
-    session = db_session.create_session()
 
+    api.add_resource(users_resource.UserResource, '/api/users/<user_login>')
+    api.add_resource(users_resource.UserListResource, '/api/user/')
+    api.add_resource(tasks_resource.TaskResource, '/api/task/<task_id>')
+    api.add_resource(tasks_resource.TaskListResource, '/api/tasks/<user_login>')
     admin = Admin(app, index_view=MyAdminIndexView())
 
     path = op.join(op.dirname(__file__), '')
@@ -257,6 +257,7 @@ if __name__ == '__main__':
         os.mkdir(path)
     except OSError:
         pass
+    session = db_session.create_session()
     admin.add_view(fileadmin.FileAdmin(path, '', name='all'))
 
     admin.add_view(MyUserAdmin(session))
