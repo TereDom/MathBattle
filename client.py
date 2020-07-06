@@ -2,12 +2,8 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QTableWidgetItem, QMessageBox
-from PyQt5.uic.properties import QtCore
 from requests import get, post, put, delete
 from werkzeug.security import generate_password_hash, check_password_hash
-
-from data.__all_models import *
-from data import db_session
 
 
 def set_password(password):
